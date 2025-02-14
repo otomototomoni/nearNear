@@ -27,21 +27,6 @@ import androidx.navigation.compose.rememberNavController
  */
 @Composable
 fun StoreDetailScreen(navController: NavHostController){
-
-    //test　ToDo：消す
-    Button(
-        onClick = { navController.navigate("searchCondition") }
-    ) {
-        Text("Topへ")
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun StoreDetailScreenPreview(){
-    val navController = rememberNavController()
-
-    //画面を全体的に表示　ToDo:後で消して画面のメソッドのみにする
     Scaffold(
         topBar = { Text("店舗詳細") },
         bottomBar = { Text("ボトムバー") }
@@ -51,7 +36,19 @@ fun StoreDetailScreenPreview(){
                 .fillMaxSize()
                 .padding(innerPadding)
         ){
-            StoreDetailScreen(navController = navController)
+            //testButton　ToDo：消す
+            Button(
+                onClick = { navController.navigate("searchCondition") }
+            ) {
+                Text("Topへ")
+            }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun StoreDetailScreenPreview(){
+    val navController = rememberNavController()
+    StoreDetailScreen(navController)
 }

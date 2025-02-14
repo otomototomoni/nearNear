@@ -24,24 +24,8 @@ import androidx.navigation.compose.rememberNavController
  */
 @Composable
 fun SearchConditionScreen(navController: NavHostController) {
-    //ToDo: Scaffoldを使用した画面の構築
-
-    //test　ToDo: 消す
-    Button(
-        onClick = { navController.navigate("searchResult") }
-    ) {
-        Text("検索")
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun SearchConditionScreenPreview(){
-    val navController = rememberNavController()
-
-    //画面を全体表示させるためのもの　ToDo:後で消して画面のメソッドのみにする
     Scaffold(
-        topBar = {Text("検索結果画面")},
+        topBar = {Text("検索条件入力画面")},
         bottomBar = {Text("ボトムバー")}
     ) { innerPadding ->
         Column(
@@ -49,7 +33,19 @@ fun SearchConditionScreenPreview(){
                 .fillMaxSize()
                 .padding(innerPadding)
         ){
-            SearchConditionScreen(navController = navController)
+            //testButton　ToDo: 消す
+            Button(
+                onClick = { navController.navigate("searchResult") }
+            ) {
+                Text("検索")
+            }
         }
     }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SearchConditionScreenPreview(){
+    val navController = rememberNavController()
+    SearchConditionScreen(navController = navController)
 }
