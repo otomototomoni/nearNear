@@ -3,7 +3,7 @@ package com.example.nearnear
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
-/*
+/**
  * 検索条件入力画面
  * --機能--
  * ToDo

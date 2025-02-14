@@ -6,7 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 
-/*
+/**
  * アプリケーションの画面遷移に関するコンポーザブル
  *
  * @param navController 画面遷移を行うためのコンテナ
