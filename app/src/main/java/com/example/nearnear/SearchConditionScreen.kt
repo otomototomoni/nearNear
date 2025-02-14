@@ -1,5 +1,7 @@
 package com.example.nearnear
 
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
@@ -16,4 +18,11 @@ import androidx.navigation.NavHostController
 @Composable
 fun SearchConditionScreen(navController: NavHostController) {
     //ToDo: Scaffoldを使用した画面の構築
+
+    //test　ToDo: 消す
+    Button(
+        onClick = { navController.navigate("searchResult") }
+    ) {
+        Text("検索")
+    }
 }

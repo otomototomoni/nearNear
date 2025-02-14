@@ -1,5 +1,7 @@
 package com.example.nearnear
 
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
@@ -18,4 +20,10 @@ import androidx.navigation.NavHostController
 @Composable
 fun SearchResultScreen(navController: NavHostController) {
 
+    //test　ToDo：消す
+    Button(
+        onClick = { navController.navigate("storeDetail") }
+    ) {
+        Text("このお店を表示")
+    }
 }

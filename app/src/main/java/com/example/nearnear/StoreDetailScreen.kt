@@ -1,9 +1,11 @@
 package com.example.nearnear
 
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 
-/*
+/**
  * 店舗詳細画面
  * --機能--
  * ToDo
@@ -19,4 +21,10 @@ import androidx.navigation.NavHostController
 @Composable
 fun StoreDetailScreen(navController: NavHostController){
 
+    //test　ToDo：消す
+    Button(
+        onClick = { navController.navigate("searchCondition") }
+    ) {
+        Text("Topへ")
+    }
 }
