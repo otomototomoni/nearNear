@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
             NearNearTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = "kotlin",
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
