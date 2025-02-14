@@ -25,6 +25,12 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            //環境変数からAPIキーを取得するやつ APIキーを環境変数で"RECRUIT_API_KEY"として保存している
+            buildConfigField("String", "RECRUIT_API_KEY", "\"${System.getenv("RECRUIT_API_KEY")}\"")
+        }
+        //環境変数からAPIキーを取得するやつ。debugだからテストで使う用？
+        debug {
+            buildConfigField("String", "RECRUIT_API_KEY", "\"${System.getenv("RECRUIT_API_KEY")}\"")
         }
     }
     compileOptions {
@@ -36,6 +42,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -50,6 +57,21 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
+
+    //api実装のために記述したもの
+    //Retrofit本体
+    implementation(libs.retrofit)
+    //RetrofitでGsonを使用するためのコンバーター
+    implementation(libs.retrofit2.converter.gson)
+    //Retrofitが内部で使用するHttpクライアント
+    implementation(libs.okhttp)
+    //デバッグ用。リクエストとレスポンスをログに出力
+    implementation(libs.logging.interceptor)
+    //ViewModelを使用するためのもの
+    implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.androidx.contentpager)
+    //
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
