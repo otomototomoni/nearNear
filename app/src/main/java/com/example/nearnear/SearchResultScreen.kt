@@ -9,6 +9,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
@@ -25,7 +27,7 @@ import androidx.navigation.compose.rememberNavController
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun SearchResultScreen(navController: NavHostController) {
+fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel) {
     Scaffold(
         topBar = {Text("検索結果画面")},
         bottomBar = {Text("ボトムバー")}
@@ -34,10 +36,13 @@ fun SearchResultScreen(navController: NavHostController) {
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .padding(16.dp)
         ){
             //testButton　ToDo：消す
             Button(
-                onClick = { navController.navigate("storeDetail") }
+                onClick = {
+                    navController.navigate("storeDetail")
+                }
             ) {
                 Text("このお店を表示")
             }
@@ -49,5 +54,5 @@ fun SearchResultScreen(navController: NavHostController) {
 @Composable
 fun SearchResultScreenPreview(){
     val navController = rememberNavController()
-    SearchResultScreen(navController = navController)
+    SearchResultScreen(navController,viewModel = viewModel())
 }

@@ -9,6 +9,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 
@@ -26,7 +27,7 @@ import androidx.navigation.compose.rememberNavController
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun StoreDetailScreen(navController: NavHostController){
+fun StoreDetailScreen(navController: NavHostController,viewModel: MainViewModel){
     Scaffold(
         topBar = { Text("店舗詳細") },
         bottomBar = { Text("ボトムバー") }
@@ -50,5 +51,5 @@ fun StoreDetailScreen(navController: NavHostController){
 @Composable
 fun StoreDetailScreenPreview(){
     val navController = rememberNavController()
-    StoreDetailScreen(navController)
+    StoreDetailScreen(navController,viewModel = viewModel())
 }

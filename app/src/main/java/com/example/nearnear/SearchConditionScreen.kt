@@ -25,8 +25,7 @@ import androidx.navigation.compose.rememberNavController
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun SearchConditionScreen(navController: NavHostController) {
-    val viewModel: MainViewModel = viewModel()
+fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewModel) {
     Scaffold(
         topBar = {Text("検索条件入力画面")},
         bottomBar = {Text("ボトムバー")}
@@ -43,8 +42,8 @@ fun SearchConditionScreen(navController: NavHostController) {
                 onClick = {
                     // API リクエストを実行
                     viewModel.getShops(
-                        latitude = 35.669220, // 例：東京駅の緯度
-                        longitude = 139.761457, // 例：東京駅の経度
+                        latitude = 34.397619, // 例：東京駅の緯度
+                        longitude = 132.475363, // 例：東京駅の経度
                         range = 1 // 例：300m
                     )
                     navController.navigate("searchResult")
@@ -60,5 +59,5 @@ fun SearchConditionScreen(navController: NavHostController) {
 @Composable
 fun SearchConditionScreenPreview(){
     val navController = rememberNavController()
-    SearchConditionScreen(navController = navController)
+    SearchConditionScreen(navController,viewModel = viewModel())
 }
