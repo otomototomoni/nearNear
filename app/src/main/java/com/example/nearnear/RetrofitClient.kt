@@ -14,7 +14,7 @@ import retrofit2.converter.gson.GsonConverterFactory
  */
 object RetrofitClient {
     //ホットペッパーAPIのベースURLを定義
-    private const val BASE_URL = "https://webservice.recruit.co.jp"
+    private const val BASE_URL = "https://webservice.recruit.co.jp/"
 
     //Retrofitを使用してApiServiceインターフェースの実装を作成
     val apiService: ApiService by lazy {

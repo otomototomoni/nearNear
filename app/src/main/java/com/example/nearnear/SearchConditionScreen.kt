@@ -43,9 +43,9 @@ fun SearchConditionScreen(navController: NavHostController) {
                 onClick = {
                     // API リクエストを実行
                     viewModel.getShops(
-                        latitude = 35.681236, // 例：東京駅の緯度
-                        longitude = 139.767125, // 例：東京駅の経度
-                        range = 5 // 例：300m
+                        latitude = 35.669220, // 例：東京駅の緯度
+                        longitude = 139.761457, // 例：東京駅の経度
+                        range = 1 // 例：300m
                     )
                     navController.navigate("searchResult")
                 }
