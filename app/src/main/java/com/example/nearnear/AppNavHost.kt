@@ -25,7 +25,7 @@ fun AppNavHost(
     ){
         //
         composable("searchCondition"){ SearchConditionScreen(navController = navController,viewModel = viewModel) }
-        composable("searchResult"){ SearchResultScreen(navController = navController,viewModel = viewModel()) }
-        composable("storeDetail"){ StoreDetailScreen(navController = navController,viewModel = viewModel())}
+        composable("searchResult"){ SearchResultScreen(navController = navController,viewModel = viewModel) }
+        composable("storeDetail"){ StoreDetailScreen(navController = navController,viewModel = viewModel)}
     }
 }
