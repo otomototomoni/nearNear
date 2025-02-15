@@ -3,8 +3,12 @@ package com.example.nearnear
 /*
  * Retrofitクライアントのレスポンスデータのクラス
  *
- * ToDo: 何をしているのかを調べる。コメントとして残す
+ * ToDo：何をしているのか調べる
+ *  ホットペッパーAPIから孵されるJSONデータをマッピングするためのデータクラス
+ *  ApiServiceでリクエストを送り、どのような情報が欲しいのかをここで定義する
  */
+
+//APIレスポンス全体のデータクラス
 data class ResponseData (
     val results: Results
 )
