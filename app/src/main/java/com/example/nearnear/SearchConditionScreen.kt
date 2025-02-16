@@ -1,5 +1,6 @@
 package com.example.nearnear
 
+import android.content.Context
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -8,6 +9,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,7 +27,10 @@ import androidx.navigation.compose.rememberNavController
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewModel) {
+fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewModel){
+    //contextの取得
+    val context : Context = LocalContext.current
+
     Scaffold(
         topBar = {Text("検索条件入力画面")},
         bottomBar = {Text("ボトムバー")}
@@ -40,10 +45,12 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
             //testButton　ToDo: 消す
             Button(
                 onClick = {
+                    //GPSから現在地の取得
+                    val location = getLocation(context)
                     // API リクエストを実行
                     viewModel.getShops(
-                        latitude = 34.397619, // 例：東京駅の緯度
-                        longitude = 132.475363, // 例：東京駅の経度
+                        latitude = location?.latitude ?: 34.2, // 例：東京駅の緯度
+                        longitude = location?.longitude ?: 139.1, // 例：東京駅の経度
                         range = 1 // 例：300m
                     )
                     navController.navigate("searchResult")

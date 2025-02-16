@@ -5,6 +5,12 @@
     <!--インターネットへのアクセスを許可する-->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!--GPS-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <!-- Android 10 以降をターゲットとする場合 -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
