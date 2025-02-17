@@ -45,7 +45,7 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                 .padding(16.dp)
         ){
             Text(text = "検索条件を入力してください。")
-            //testButton　ToDo: 消す
+            //testButton　ToDo: デザインを後で帰るところ
             Button(
                 onClick = {
                     //GPSから現在地の取得。LocationUtilsオブジェクトのメソッドを実行
@@ -54,10 +54,10 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                     if(!LocationUtils.isGPSEnabled()){
                         println("GPSがオフです。")
                     }else {
-                        println("GPSがオンです。")//ToDo: 後で消す。
+                        println("GPSがオンです。\n緯度は${location?.latitude}、経度は${location?.longitude}です。")//ToDo: 後で消す。
                         viewModel.getShops(
-                            latitude = location?.latitude ?: 34.2, // 例：東京駅の緯度
-                            longitude = location?.longitude ?: 139.1, // 例：東京駅の経度
+                            latitude = location?.latitude ?: 35.669220, // 例：東京駅の緯度
+                            longitude = location?.longitude ?: 139.761457, // 例：東京駅の経度
                             range = 1 // 例：300m
                         )
                         navController.navigate("searchResult")
