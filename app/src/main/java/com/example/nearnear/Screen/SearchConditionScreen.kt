@@ -1,4 +1,4 @@
-package com.example.nearnear
+package com.example.nearnear.Screen
 
 import android.content.Context
 import androidx.compose.foundation.layout.Column
@@ -15,6 +15,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.nearnear.Gps.LocationUtils
+import com.example.nearnear.MainViewModel
 
 /**
  * 検索条件入力画面
@@ -45,8 +47,8 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
             //testButton　ToDo: 消す
             Button(
                 onClick = {
-                    //GPSから現在地の取得
-                    val location = getLocation(context)
+                    //GPSから現在地の取得。LocationUtilsオブジェクトのメソッドを実行
+                    val location = LocationUtils.getLocation(context)
                     // API リクエストを実行
                     viewModel.getShops(
                         latitude = location?.latitude ?: 34.2, // 例：東京駅の緯度

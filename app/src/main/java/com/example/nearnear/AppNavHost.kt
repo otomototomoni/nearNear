@@ -6,6 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.nearnear.Screen.SearchConditionScreen
+import com.example.nearnear.Screen.SearchResultScreen
+import com.example.nearnear.Screen.StoreDetailScreen
 
 /**
  * アプリケーションの画面遷移に関するコンポーザブル
@@ -26,6 +29,6 @@ fun AppNavHost(
         //
         composable("searchCondition"){ SearchConditionScreen(navController = navController,viewModel = viewModel) }
         composable("searchResult"){ SearchResultScreen(navController = navController,viewModel = viewModel) }
-        composable("storeDetail"){ StoreDetailScreen(navController = navController,viewModel = viewModel)}
+        composable("storeDetail"){ StoreDetailScreen(navController = navController,viewModel = viewModel) }
     }
 }

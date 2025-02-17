@@ -1,4 +1,4 @@
-package com.example.nearnear
+package com.example.nearnear.HotPepperApi
 
 //RetrofitCLientオブジェクトを動かすためのimport
 import okhttp3.OkHttpClient
