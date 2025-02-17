@@ -5,8 +5,12 @@ import android.content.Context
 import android.content.Intent
 import android.provider.Settings
 
+/*
+ * GPSがオフになっているときにアラートを表示するメソッド
+ */
 fun promptUserToEnableGPS(context: Context) {
-    if (!LocationUtils.isGPSEnabled(context)) {
+    //LocationUtilsオブジェクトの使用。GPSが有効かどうかを確認
+    if (!LocationUtils.isGPSEnabled()) {
         AlertDialog.Builder(context)
             .setMessage("GPSがオフになっています。位置情報を正確に取得するためには、GPSをオンにしてください。")
             .setPositiveButton("設定") { _, _ ->

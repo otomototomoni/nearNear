@@ -32,6 +32,7 @@ import com.example.nearnear.MainViewModel
 fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewModel){
     //contextの取得
     val context : Context = LocalContext.current
+    LocationUtils.init(context)
 
     Scaffold(
         topBar = {Text("検索条件入力画面")},
@@ -50,12 +51,17 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                     //GPSから現在地の取得。LocationUtilsオブジェクトのメソッドを実行
                     val location = LocationUtils.getLocation(context)
                     // API リクエストを実行
-                    viewModel.getShops(
-                        latitude = location?.latitude ?: 34.2, // 例：東京駅の緯度
-                        longitude = location?.longitude ?: 139.1, // 例：東京駅の経度
-                        range = 1 // 例：300m
-                    )
-                    navController.navigate("searchResult")
+                    if(!LocationUtils.isGPSEnabled()){
+                        println("GPSがオフです。")
+                    }else {
+                        println("GPSがオンです。")//ToDo: 後で消す。
+                        viewModel.getShops(
+                            latitude = location?.latitude ?: 34.2, // 例：東京駅の緯度
+                            longitude = location?.longitude ?: 139.1, // 例：東京駅の経度
+                            range = 1 // 例：300m
+                        )
+                        navController.navigate("searchResult")
+                    }
                 }
             ) {
                 Text("検索")
