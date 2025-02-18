@@ -32,9 +32,9 @@ class LocationUtils{
                 0f,
                 locationListener
             )
-            println("requestLocationUpdatesが実行されました。")//ToDO:後で消す
+            Log.d("LocationUtils.kt requestLocation()","requestLocationUpdatesが実行されました。")//ToDO:後で消す
         } catch (e: SecurityException){
-            Log.e("LocationUtils","SecurityException: ${e.message}")
+            Log.e("LocationUtils.kt requestLocation()","SecurityException: ${e.message}")
         }
     }
 
@@ -53,7 +53,7 @@ class LocationUtils{
                 return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             }
         }else{
-            println("GPSのパーミッションが許可されていません。")
+            Log.d("LocationUtils.kt getLocation()","GPSのパーミッションが許可されていません。")
             return null
         }
     }

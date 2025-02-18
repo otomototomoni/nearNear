@@ -17,17 +17,17 @@ object MyLocationListener: LocationListener{
 
             //プロバイダが有効になった際に呼び出される
             override fun onProviderEnabled(provider: String) {
-                println("プロバイダが有効になりました：${provider}")
+                Log.d("LocationListener","プロバイダが有効になりました：${provider}")
             }
 
             //プロバイダが無効になった際に呼び出される
             override fun onProviderDisabled(provider: String) {
-                println("プロバイダが無効になりました：${provider}")
+                Log.d("LocationListener","プロバイダが無効になりました：${provider}")
             }
 
             //プロバイダの状態が変更された際に呼び出される
             override fun onStatusChanged(provider: String?, status: Int, extras: Bundle?) {
-                println("changed:${provider},status:${status}")
+                Log.d("LocationListener","changed:${provider},status:${status}")
             }
 
 }

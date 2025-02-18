@@ -1,6 +1,7 @@
 package com.example.nearnear.Screen
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -54,10 +55,10 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                     val location = LocationUtils.getLocation(context)
 
                     if(!LocationUtils.isGPSEnabled()){
-                        println("GPSがオフです。")
+                        Log.d("SearchConditionScreen.kt","GPSがオフです。")
                     }else {
-                        println(
-                            "GPSがオンです。\n緯度は${location?.latitude}、経度は${location?.longitude}です。"
+                        Log.d(
+                            "SearchConditionScreen.kt","GPSがオンです。\n緯度は${location?.latitude}、経度は${location?.longitude}です。"
                         )//ToDo: 後で消す。
                         // API リクエストを実行
                         viewModel.getShops(
