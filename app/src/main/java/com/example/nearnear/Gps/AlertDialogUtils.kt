@@ -9,6 +9,7 @@ import android.provider.Settings
  * GPSがオフになっているときにアラートを表示するメソッド
  */
 fun promptUserToEnableGPS(context: Context) {
+    val LocationUtils = LocationUtils()
     //LocationUtilsオブジェクトの使用。GPSが有効かどうかを確認
     if (!LocationUtils.isGPSEnabled()) {
         AlertDialog.Builder(context)

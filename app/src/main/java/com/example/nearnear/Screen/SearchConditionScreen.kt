@@ -30,6 +30,8 @@ import com.example.nearnear.MainViewModel
  */
 @Composable
 fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewModel){
+    //LocationUtilsクラスのインスタンス作成
+    val LocationUtils = LocationUtils()
     //contextの取得
     val context : Context = LocalContext.current
     LocationUtils.init(context)
@@ -45,16 +47,19 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                 .padding(16.dp)
         ){
             Text(text = "検索条件を入力してください。")
-            //testButton　ToDo: デザインを後で帰るところ
+            //testButton　ToDo: デザインを後で変えるところ
             Button(
                 onClick = {
                     //GPSから現在地の取得。LocationUtilsオブジェクトのメソッドを実行
                     val location = LocationUtils.getLocation(context)
-                    // API リクエストを実行
+
                     if(!LocationUtils.isGPSEnabled()){
                         println("GPSがオフです。")
                     }else {
-                        println("GPSがオンです。\n緯度は${location?.latitude}、経度は${location?.longitude}です。")//ToDo: 後で消す。
+                        println(
+                            "GPSがオンです。\n緯度は${location?.latitude}、経度は${location?.longitude}です。"
+                        )//ToDo: 後で消す。
+                        // API リクエストを実行
                         viewModel.getShops(
                             latitude = location?.latitude ?: 35.669220, // 例：東京駅の緯度
                             longitude = location?.longitude ?: 139.761457, // 例：東京駅の経度

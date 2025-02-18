@@ -2,13 +2,14 @@ package com.example.nearnear.Gps
 
 import android.content.Context
 import android.location.Location
+import android.location.LocationListener
 import android.location.LocationManager
-import androidx.compose.ui.platform.LocalContext
+import android.util.Log
 
 /*
  * locationManagerが重複していたため、objectで定義
  */
-object LocationUtils{
+class LocationUtils{
     //現在地の取得するための準備。位置情報サービスを管理するためのLocationManagerオブジェクトの取得
     private lateinit var locationManager: LocationManager
 
@@ -23,6 +24,19 @@ object LocationUtils{
     }
 
     //ToDo: requestLocationUpdates,新しいメソッドを作成する必要がある。
+    fun requestLocation(locationListener: LocationListener){
+        try {
+            locationManager.requestLocationUpdates(
+                LocationManager.GPS_PROVIDER,
+                0,
+                0f,
+                locationListener
+            )
+            println("requestLocationUpdatesが実行されました。")//ToDO:後で消す
+        } catch (e: SecurityException){
+            Log.e("LocationUtils","SecurityException: ${e.message}")
+        }
+    }
 
     //ToDo: このメソッドはまとめ用のメソッドのため別のファイルでの管理をした方がいい
     //最後に取得した位置情報を取得するメソッド
@@ -34,6 +48,7 @@ object LocationUtils{
                 promptUserToEnableGPS(context)
                 return null
             }else {
+                requestLocation(MyLocationListener)
                 //最後に取得したGPS情報を受け取る。今までに位置情報を取得していないならnullもしくはエラーを吐く
                 return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
             }
@@ -42,6 +57,5 @@ object LocationUtils{
             return null
         }
     }
-
 }
 
