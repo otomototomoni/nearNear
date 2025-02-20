@@ -16,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.nearnear.Gps.AlertDialogUtils
 import com.example.nearnear.Gps.LocationUtils
 import com.example.nearnear.MainViewModel
 
@@ -51,19 +52,20 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
             //testButton　ToDo: デザインを後で変えるところ
             Button(
                 onClick = {
-                    //GPSから現在地の取得。LocationUtilsオブジェクトのメソッドを実行
-                    val location = LocationUtils.getLocation(context)
-
+                    //ToDo: if文を無くす。その際にどのように画面遷移を行うか考える
                     if(!LocationUtils.isGPSEnabled()){
                         Log.d("SearchConditionScreen.kt","GPSがオフです。")
+                        AlertDialogUtils.promptUserToEnableGPS(context)
                     }else {
+                        //GPSから現在地の取得。LocationUtilsオブジェクトのメソッドを実行
+                        val location = LocationUtils.getLocation(context)
                         Log.d(
                             "SearchConditionScreen.kt","GPSがオンです。\n緯度は${location?.latitude}、経度は${location?.longitude}です。"
-                        )//ToDo: 後で消す。
+                        )
                         // API リクエストを実行
                         viewModel.getShops(
-                            latitude = location?.latitude ?: 35.669220, // 例：東京駅の緯度
-                            longitude = location?.longitude ?: 139.761457, // 例：東京駅の経度
+                            latitude = location?.latitude ?: 35.669220, // null：東京駅の緯度
+                            longitude = location?.longitude ?: 139.761457, // null：東京駅の経度
                             range = 1 // 例：300m
                         )
                         navController.navigate("searchResult")

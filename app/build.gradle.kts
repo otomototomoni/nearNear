@@ -58,6 +58,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
 
+    implementation (libs.google.play.services.location)
+
     //api実装のために記述したもの
     //Retrofit本体
     implementation(libs.retrofit)

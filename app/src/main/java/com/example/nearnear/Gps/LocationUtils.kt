@@ -18,13 +18,18 @@ class LocationUtils{
         locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
     }
 
-    //GPSが有効になっているか確認するメソッド
+    //GPSプロバイダが有効になっているか確認するメソッド
     fun isGPSEnabled(): Boolean{
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
     }
 
-    //ToDo: requestLocationUpdates,新しいメソッドを作成する必要がある。
-    fun requestLocation(locationListener: LocationListener){
+    //ネットワークプロバイダが有効になっているか確認
+    fun isNetworkEnabled(): Boolean{
+        return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    //GPSの位置情報を取得するリクエスト
+    fun requestGPSLocation(locationListener: LocationListener){
         try {
             locationManager.requestLocationUpdates(
                 LocationManager.GPS_PROVIDER,
@@ -32,25 +37,43 @@ class LocationUtils{
                 0f,
                 locationListener
             )
-            Log.d("LocationUtils.kt requestLocation()","requestLocationUpdatesが実行されました。")//ToDO:後で消す
+            Log.d("LocationUtils.kt requestGPSLocation()","requestLocationUpdatesが実行されました。")//ToDO:後で消す
         } catch (e: SecurityException){
-            Log.e("LocationUtils.kt requestLocation()","SecurityException: ${e.message}")
+            Log.e("LocationUtils.kt requestGPSLocation()","SecurityException: ${e.message}")
         }
     }
 
-    //ToDo: このメソッドはまとめ用のメソッドのため別のファイルでの管理をした方がいい
+    //ネットワークでの位置情報を取得するリクエスト
+    fun requestNetworkLocation(locationListener: LocationListener){
+        try {
+            locationManager.requestLocationUpdates(
+                LocationManager.NETWORK_PROVIDER,
+                0,
+                0f,
+                locationListener
+            )
+            Log.d("LocationUtils.kt requestNetworkLocation()","requestLocationUpdatesが実行されました。")//ToDO:後で消す
+        } catch (e: SecurityException){
+            Log.e("LocationUtils.kt requestNetworkLocation()","SecurityException: ${e.message}")
+        }
+    }
+
     //最後に取得した位置情報を取得するメソッド
     fun getLocation(context: Context): Location? {
         //パーミッション（権限）の確認　。許可されているなら実行
-        if(checkLocationPermission(context)) {
+        if(PermissionUtils.checkGpsPermission(context)) {
             //GPSが有効になっているかの確認。無効ならアラートを表示。有効なら現在地を取得
-            if(!isGPSEnabled()){
-                promptUserToEnableGPS(context)
+            if((!isGPSEnabled() == true) && (!isNetworkEnabled() == true)){
+                AlertDialogUtils.promptUserToEnableGPS(context)
                 return null
             }else {
-                requestLocation(MyLocationListener)
+                Log.d("getLocation","isNetworkEnabled:${isNetworkEnabled()}")
+                //GPSプロバイダで実行
+                requestGPSLocation(MyLocationListener)
+                //Networkプロバイダで実行
+                requestNetworkLocation(MyLocationListener)
                 //最後に取得したGPS情報を受け取る。今までに位置情報を取得していないならnullもしくはエラーを吐く
-                return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+                return locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
             }
         }else{
             Log.d("LocationUtils.kt getLocation()","GPSのパーミッションが許可されていません。")
