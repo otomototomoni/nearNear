@@ -19,6 +19,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.nearnear.Gps.AlertDialogUtils
 import com.example.nearnear.Gps.LocationUtils
+import com.example.nearnear.Gps.PermissionUtils
 import com.example.nearnear.MainViewModel
 
 /**
@@ -54,8 +55,11 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
             Button(
                 onClick = {
                     //ToDo: if文を無くす。その際にどのように画面遷移を行うか考える
-                    if(!LocationUtils.isGPSEnabled()){
-                        Log.d("SearchConditionScreen.kt","GPSがオフです。")
+                    if(!PermissionUtils.checkGpsPermission(context)) {
+                        Log.d("SearchConditionScreen.kt", "GPSパーミッションがオフです。")
+                        navController.navigate("locationPermission")
+                    }else if(!LocationUtils.isGPSEnabled()) {
+                        Log.d("SearchConditionScreen.kt", "GPSがオフです。")
                         AlertDialogUtils.promptUserToEnableGPS(context)
                     }else {
                         //GPSから現在地の取得。LocationUtilsオブジェクトのメソッドを実行

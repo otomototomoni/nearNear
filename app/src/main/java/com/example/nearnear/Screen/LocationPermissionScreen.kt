@@ -8,6 +8,7 @@ import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -23,11 +24,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavHostController
 import com.example.nearnear.AppNavHost
+import com.example.nearnear.Gps.PermissionUtils
 import com.example.nearnear.MainActivity
+import com.example.nearnear.MainViewModel
 
 @Composable
-fun LocationPermissionScreen() {
+fun LocationPermissionScreen(navController: NavHostController, viewModel: MainViewModel) {
     val context = LocalContext.current
     var permissionGranted by remember { mutableStateOf(false) }
     var showPermissionRationale by remember { mutableStateOf(false) }
@@ -51,43 +55,46 @@ fun LocationPermissionScreen() {
                 isPermanentlyDenied = true
             }
         }
+        Log.d("Launcher","permissionGranted:${permissionGranted}")
+        Log.d("Launcher","showPermissionRationals:${showPermissionRationale}")
+        Log.d("Launcher","isPermanentlyDenied:${isPermanentlyDenied}")
     }
 
     LaunchedEffect(key1 = true) {
         // アプリ起動時にパーミッションをチェック
-        val permissionCheckResult = ContextCompat.checkSelfPermission(
-            context,
-            android.Manifest.permission.ACCESS_FINE_LOCATION
-        )
-        if (permissionCheckResult == PackageManager.PERMISSION_GRANTED) {
+        if (PermissionUtils.checkGpsPermission(context)) {
+            Log.d("LaunchedEffect","checkGpsPermissionがtrueです。")
             permissionGranted = true
         } else {
+            Log.d("LaunchedEffect","checkGpsPermissionがfalseです。")
             // パーミッションが許可されていない場合、リクエストを開始
             locationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
 
     Column(
-        modifier = Modifier.padding(16.dp),
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         if (permissionGranted) {
-            Text("Location permission granted. App is running.")
+            Text("GPSパーミッションは許可されています。")
             // パーミッションが許可された場合の処理
             Log.d("MainActivity.kt", "GPSパーミッションが許可されています。")
             //すでに権限がある場合の処理
-            AppNavHost()
+            navController.navigate("searchCondition")
         } else if (showPermissionRationale) {
-            Text("Location permission is required to use this app.")
+            Text("このアプリケーションを使用するにはGPSパーミッションが必要です。")
             Button(onClick = {
                 // パーミッションを再度リクエスト
                 locationPermissionLauncher.launch(android.Manifest.permission.ACCESS_FINE_LOCATION)
                 showPermissionRationale = false
             }) {
-                Text("Request Permission Again")
+                Text("もう一度パーミッションを表示する。")
             }
         } else if (isPermanentlyDenied) {
-            Text("Location permission is permanently denied. Please enable it in app settings.")
+            Text("GPSパーミッションが拒否されました。アプリケーションを使用するには下のボタンから設定に行き、「Permission」の「Location」を許可してください。")
             Button(onClick = {
                 // アプリの設定画面を開く
                 val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
