@@ -55,16 +55,14 @@ fun LocationPermissionScreen(navController: NavHostController, viewModel: MainVi
                 isPermanentlyDenied = true
             }
         }
-        Log.d("Launcher","permissionGranted:${permissionGranted}")
-        Log.d("Launcher","showPermissionRationals:${showPermissionRationale}")
-        Log.d("Launcher","isPermanentlyDenied:${isPermanentlyDenied}")
     }
 
-    LaunchedEffect(key1 = true) {
+    LaunchedEffect(key1 = permissionGranted) {
         // アプリ起動時にパーミッションをチェック
         if (PermissionUtils.checkGpsPermission(context)) {
             Log.d("LaunchedEffect","checkGpsPermissionがtrueです。")
-            permissionGranted = true
+            //すでに権限がある場合の処理
+            navController.navigate("searchCondition")
         } else {
             Log.d("LaunchedEffect","checkGpsPermissionがfalseです。")
             // パーミッションが許可されていない場合、リクエストを開始
@@ -78,13 +76,7 @@ fun LocationPermissionScreen(navController: NavHostController, viewModel: MainVi
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        if (permissionGranted) {
-            Text("GPSパーミッションは許可されています。")
-            // パーミッションが許可された場合の処理
-            Log.d("MainActivity.kt", "GPSパーミッションが許可されています。")
-            //すでに権限がある場合の処理
-            navController.navigate("searchCondition")
-        } else if (showPermissionRationale) {
+        if (showPermissionRationale) {
             Text("このアプリケーションを使用するにはGPSパーミッションが必要です。")
             Button(onClick = {
                 // パーミッションを再度リクエスト
