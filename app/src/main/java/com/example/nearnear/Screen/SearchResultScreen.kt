@@ -1,4 +1,4 @@
-package com.example.nearnear
+package com.example.nearnear.Screen
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,39 +9,43 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.example.nearnear.MainViewModel
 
 /**
- * 店舗詳細画面
+ * 検索結果画面
  * --機能--
  * ToDo
- *  検索結果画⾯で選択した店舗の情報を表⽰
- *  ・店舗名称
- *  ・住所
- *  ・営業時間
- *  ・画像
- *  詳細画⾯にあるべきと思われる機能を実装してください。
+ *  各店舗の項目の表示
+ *  ・店舗名
+ *  ・アクセス
+ *  ・サムネイル画像
+ *  可能であればページングに対応
  *
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun StoreDetailScreen(navController: NavHostController,viewModel: MainViewModel){
+fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel) {
     Scaffold(
-        topBar = { Text("店舗詳細") },
-        bottomBar = { Text("ボトムバー") }
+        topBar = {Text("検索結果画面")},
+        bottomBar = {Text("ボトムバー")}
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
+                .padding(16.dp)
         ){
             //testButton　ToDo：消す
             Button(
-                onClick = { navController.navigate("searchCondition") }
+                onClick = {
+                    navController.navigate("storeDetail")
+                }
             ) {
-                Text("Topへ")
+                Text("このお店を表示")
             }
         }
     }
@@ -49,7 +53,7 @@ fun StoreDetailScreen(navController: NavHostController,viewModel: MainViewModel)
 
 @Preview(showBackground = true)
 @Composable
-fun StoreDetailScreenPreview(){
+fun SearchResultScreenPreview(){
     val navController = rememberNavController()
-    StoreDetailScreen(navController,viewModel = viewModel())
+    SearchResultScreen(navController,viewModel = viewModel())
 }

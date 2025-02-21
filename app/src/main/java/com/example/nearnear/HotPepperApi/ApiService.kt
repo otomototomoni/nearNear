@@ -1,4 +1,4 @@
-package com.example.nearnear
+package com.example.nearnear.HotPepperApi
 
 
 import retrofit2.Call
