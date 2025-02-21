@@ -1,6 +1,7 @@
 package com.example.nearnear.Screen
 
 import android.content.Context
+import android.location.Location
 import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize

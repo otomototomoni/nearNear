@@ -58,7 +58,19 @@ class LocationUtils{
         }
     }
 
-    //最後に取得した位置情報を取得するメソッド
+    //ネットワークプロバイダを使用して最後に取得した位置情報を取得する
+    fun getLastKnownLocationNetwork(context: Context): Location? {
+        PermissionUtils.checkNetworkPermission(context)
+        return locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+    }
+
+    //GPSプロバイダを使用して最後に取得した位置情報を取得
+    fun getLastKnownLocationGPS(context: Context): Location? {
+        PermissionUtils.checkGpsPermission(context)
+        return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
+    }
+
+    //最後に取得した位置情報を取得する一連の流れメソッド
     fun getLocation(context: Context): Location? {
         //パーミッション（権限）の確認　。許可されているなら実行
         if(PermissionUtils.checkGpsPermission(context)) {
@@ -67,13 +79,20 @@ class LocationUtils{
                 AlertDialogUtils.promptUserToEnableGPS(context)
                 return null
             }else {
+                //Todo: あとでLogを消す
                 Log.d("getLocation","isNetworkEnabled:${isNetworkEnabled()}")
+                Log.d("getLocation","NetworkPermission:${PermissionUtils.checkNetworkPermission(context)}")
                 //GPSプロバイダで実行
                 requestGPSLocation(MyLocationListener)
                 //Networkプロバイダで実行
                 requestNetworkLocation(MyLocationListener)
                 //最後に取得したGPS情報を受け取る。今までに位置情報を取得していないならnullもしくはエラーを吐く
-                return locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
+                //GPSで位置情報を受け取れた場合にはGPS、そうでなければネットワークで位置情報を受け取る
+                if(getLastKnownLocationGPS(context) != null){
+                    return getLastKnownLocationGPS(context)
+                }else{
+                    return getLastKnownLocationNetwork(context)
+                }
             }
         }else{
             Log.d("LocationUtils.kt getLocation()","GPSのパーミッションが許可されていません。")
