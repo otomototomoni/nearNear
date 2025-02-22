@@ -54,7 +54,6 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
             //testButton　ToDo: デザインを後で変えるところ
             Button(
                 onClick = {
-                    //ToDo: if文を無くす。その際にどのように画面遷移を行うか考える
                     if(!PermissionUtils.checkGpsPermission(context)) {
                         Log.d("SearchConditionScreen.kt", "GPSパーミッションがオフです。")
                         navController.navigate("locationPermission")
@@ -68,7 +67,7 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                             "SearchConditionScreen.kt","GPSがオンです。\n緯度は${location?.latitude}、経度は${location?.longitude}です。"
                         )
                         // API リクエストを実行
-                        viewModel.getShops(
+                        val shops = viewModel.getShops(
                             latitude = location?.latitude ?: 35.669220, // null：東京駅の緯度
                             longitude = location?.longitude ?: 139.761457, // null：東京駅の経度
                             range = 1 // 例：300m

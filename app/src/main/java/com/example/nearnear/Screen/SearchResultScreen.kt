@@ -7,6 +7,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -29,6 +31,9 @@ import com.example.nearnear.MainViewModel
  */
 @Composable
 fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel) {
+    //viewModelからresponseDataを取得
+    val responseData by viewModel.responseData.collectAsState()
+
     Scaffold(
         topBar = {Text("検索結果画面")},
         bottomBar = {Text("ボトムバー")}
@@ -37,7 +42,8 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
+                .padding(16.dp),
+            //スクロール可能にする
         ){
             //testButton　ToDo：消す
             Button(
@@ -46,6 +52,16 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
                 }
             ) {
                 Text("このお店を表示")
+            }
+
+            if(responseData != null){
+                responseData!!.results.shop.forEach { shop ->
+                    Text(text = "shop Name : ${shop.name}")
+                    Text(text = "shop Address : ${shop.address}")
+                    Text(text = "shop Access : ${shop.access}")
+                }
+            }else{
+                Text("APIリクエスト失敗")
             }
         }
     }

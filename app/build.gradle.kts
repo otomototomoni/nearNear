@@ -58,6 +58,8 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
 
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
+
     implementation(libs.androidx.fragment.ktx)
 
     implementation (libs.google.play.services.location)
