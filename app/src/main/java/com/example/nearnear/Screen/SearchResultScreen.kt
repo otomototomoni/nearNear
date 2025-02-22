@@ -66,7 +66,7 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
                     Text(text = "shop Access : ${shop.access}")
                 }
             }else{
-                Text("APIリクエスト失敗")
+                Text("店情報取得中...しばらくお待ちください。")
             }
         }
     }

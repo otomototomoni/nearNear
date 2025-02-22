@@ -21,6 +21,7 @@ interface ApiService {
         @Query("lat") latitude: Double,//緯度
         @Query("lng") longitude: Double,//経度
         @Query("range") range: Int,//検索範囲の指定
+        @Query("count") count: Int = 100,//取得する店舗の数
         @Query("format") format: String = "json"//レスポンスのフォーマットの指定
     ):Call<ResponseData>//APIレスポンスをResponseData型で受け取ることを指定
 }
