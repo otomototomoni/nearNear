@@ -22,5 +22,5 @@ interface ApiService {
         @Query("lng") longitude: Double,//経度
         @Query("range") range: Int,//検索範囲の指定
         @Query("format") format: String = "json"//レスポンスのフォーマットの指定
-    ):ResponseData//APIレスポンスをResponseData型で受け取ることを指定
+    ):Call<ResponseData>//APIレスポンスをResponseData型で受け取ることを指定
 }
