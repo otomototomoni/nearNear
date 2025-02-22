@@ -38,6 +38,11 @@ class MainViewModel : ViewModel() {
                 // レスポンスデータの処理
                 if (responseData != null) {
                     Log.d("responseData","データがあります。")
+                    responseData.results.shop.forEach{ shop ->
+                        Log.d("responseData","shopName : ${shop.name}")
+                        Log.d("responseData","shopAccess : ${shop.access}")
+                        Log.d("responseData","shopAddress : ${shop.address}")
+                    }
                     //取得したresponseDataを_responseDataに格納する
                     _responseData.value = responseData
                 } else {
