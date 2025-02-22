@@ -102,8 +102,8 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                         )
                         // API リクエストを実行
                         val shops = viewModel.getShops(
-                            latitude = location?.latitude ?: 34.397619, // null：東京駅の緯度
-                            longitude = location?.longitude ?: 132.475363, // null：東京駅の経度
+                            latitude = location?.latitude ?: 34.404896, // null：尾道駅の緯度
+                            longitude = location?.longitude ?: 133.193555, // null：尾道駅の経度
                             range = range
                         )
                         navController.navigate("searchResult")
