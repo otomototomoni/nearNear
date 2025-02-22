@@ -12,6 +12,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.nearnear.MainViewModel
 
 /**
@@ -28,7 +29,14 @@ import com.example.nearnear.MainViewModel
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun StoreDetailScreen(navController: NavHostController,viewModel: MainViewModel){
+fun StoreDetailScreen(
+    navController: NavHostController,
+    viewModel: MainViewModel,
+    shopName: String,
+    shopAddress: String,
+    shopPhoto: String,
+    shopOpen: String
+    ){
     Scaffold(
         topBar = { Text("店舗詳細") },
         bottomBar = { Text("ボトムバー") }
@@ -38,6 +46,14 @@ fun StoreDetailScreen(navController: NavHostController,viewModel: MainViewModel)
                 .fillMaxSize()
                 .padding(innerPadding)
         ){
+            Text(shopName)
+            AsyncImage(
+                model = shopPhoto,
+                contentDescription = null
+            )
+            Text(shopAddress)
+            Text(shopOpen)
+
             //testButton　ToDo：消す
             Button(
                 onClick = { navController.navigate("searchCondition") }
@@ -52,5 +68,13 @@ fun StoreDetailScreen(navController: NavHostController,viewModel: MainViewModel)
 @Composable
 fun StoreDetailScreenPreview(){
     val navController = rememberNavController()
-    StoreDetailScreen(navController,viewModel = viewModel())
+    val viewModel : MainViewModel = viewModel()
+    StoreDetailScreen(
+        navController,
+        viewModel,
+        "a",
+        "b",
+        "c",
+        "d"
+    )
 }

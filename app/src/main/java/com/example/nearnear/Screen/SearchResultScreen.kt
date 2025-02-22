@@ -1,9 +1,15 @@
 package com.example.nearnear.Screen
 
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
@@ -12,13 +18,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.nearnear.HotPepperApi.Shop
 import com.example.nearnear.MainViewModel
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 /**
  * 検索結果画面
@@ -52,21 +62,55 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
             //testButton　ToDo：消す
             Button(
                 onClick = {
-                    navController.navigate("storeDetail")
+                    navController.navigate("searchCondition")
                 }
             ) {
-                Text("このお店を表示")
+                Text("前の画面に戻る")
             }
 
             if(responseData != null){
                 responseData!!.results.shop.forEach { shop ->
-                    Text(text = "shop Name : ${shop.name}")
-                    //画像の出力　URLから画像を非同期で読み込み、表示するためのもの
-                    AsyncImage(model = shop.photo.pc.l, contentDescription = null)
-                    Text(text = "shop Access : ${shop.access}")
+                    ShopList(navController,shop)
                 }
             }else{
                 Text("店情報取得中...しばらくお待ちください。")
+            }
+        }
+    }
+}
+
+@Composable
+fun ShopList(navController: NavHostController,shop: Shop){
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+            .border(
+                width = 1.dp,
+                color = Color.Black,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .clickable {
+                val encodedShopName = URLEncoder.encode(shop.name, StandardCharsets.UTF_8.toString())
+                val encodedShopAddress = URLEncoder.encode(shop.address, StandardCharsets.UTF_8.toString())
+                val encodedShopPhoto = URLEncoder.encode(shop.photo.mobile.l, StandardCharsets.UTF_8.toString())
+                val encodedShopOpen = URLEncoder.encode(shop.open, StandardCharsets.UTF_8.toString())
+                navController.navigate(
+                    "storeDetail/${encodedShopName}/${encodedShopAddress}/${encodedShopPhoto}/${encodedShopOpen}"
+                )
+            }
+    ){
+        Row(
+            modifier = Modifier
+                .padding(6.dp)
+        ){
+            AsyncImage(model = shop.photo.mobile.l, contentDescription = null)
+            Column(
+                modifier = Modifier
+                    .padding(6.dp)
+            ) {
+                Text(text = shop.name)
+                Text(text = shop.access)
             }
         }
     }

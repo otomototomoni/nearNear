@@ -23,14 +23,15 @@ data class Shop(
     val lng: Double,
     val address: String,
     val access: String,
+    val open: String,
     val photo: Photo
 )
 
 data class Photo(
-    val pc: Pc
+    val mobile: Mobile
 )
-data class Pc(
+
+data class Mobile(
     val l: String,
-    val m: String,
     val s: String
 )

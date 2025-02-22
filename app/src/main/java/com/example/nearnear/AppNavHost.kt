@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.nearnear.HotPepperApi.Shop
 import com.example.nearnear.Screen.LocationPermissionScreen
 import com.example.nearnear.Screen.SearchConditionScreen
 import com.example.nearnear.Screen.SearchResultScreen
@@ -33,7 +34,28 @@ fun AppNavHost(
         composable("title"){ TitleScreen(navController = navController) }
         composable("searchCondition"){ SearchConditionScreen(navController = navController,viewModel = viewModel) }
         composable("searchResult"){ SearchResultScreen(navController = navController,viewModel = viewModel) }
-        composable("storeDetail"){ StoreDetailScreen(navController = navController,viewModel = viewModel) }
+        composable(
+            route = "storeDetail/{shopName}/{shopAddress}/{shopPhoto}/{shopOpen}",
+            arguments = listOf(
+                navArgument("shopName") { type = NavType.StringType},
+                navArgument("shopAddress") { type = NavType.StringType},
+                navArgument("shopPhoto") { type = NavType.StringType},
+                navArgument("shopOpen") { type = NavType.StringType}
+            )
+        ){ navBackStackEntry ->
+            val shopName = navBackStackEntry.arguments?.getString("shopName")
+            val shopAddress = navBackStackEntry.arguments?.getString("shopAddress")
+            val shopPhoto = navBackStackEntry.arguments?.getString("shopPhoto")
+            val shopOpen = navBackStackEntry.arguments?.getString("shopOpen")
+            StoreDetailScreen(
+                navController = navController,
+                viewModel = viewModel,
+                shopName = shopName?: "",
+                shopAddress = shopAddress?: "",
+                shopPhoto = shopPhoto?: "",
+                shopOpen = shopOpen?: ""
+            )
+        }
         composable("locationPermission") { LocationPermissionScreen(navController = navController,viewModel = viewModel) }
     }
 }
