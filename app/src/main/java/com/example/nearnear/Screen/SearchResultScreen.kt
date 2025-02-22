@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import coil.compose.AsyncImage
 import com.example.nearnear.MainViewModel
 
 /**
@@ -60,7 +61,8 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
             if(responseData != null){
                 responseData!!.results.shop.forEach { shop ->
                     Text(text = "shop Name : ${shop.name}")
-                    Text(text = "shop Address : ${shop.address}")
+                    //画像の出力　URLから画像を非同期で読み込み、表示するためのもの
+                    AsyncImage(model = shop.photo.pc.l, contentDescription = null)
                     Text(text = "shop Access : ${shop.access}")
                 }
             }else{
