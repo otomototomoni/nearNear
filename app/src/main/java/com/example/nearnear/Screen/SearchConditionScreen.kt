@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
@@ -105,7 +106,6 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                             longitude = location?.longitude ?: 139.761457, // null：東京駅の経度
                             range = range
                         )
-                        Log.d("SearchConditionScreen.kt", "検索範囲: $range")
                         navController.navigate("searchResult")
                     }
                 }
