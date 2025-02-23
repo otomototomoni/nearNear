@@ -64,8 +64,8 @@ dependencies {
 
     implementation(libs.coil.compose)
 
+    //Fused LocationProviderの追加
     implementation (libs.google.play.services.location)
-
     //api実装のために記述したもの
     //Retrofit本体
     implementation(libs.retrofit)

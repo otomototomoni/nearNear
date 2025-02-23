@@ -80,8 +80,8 @@ class LocationUtils{
                 return null
             }else {
                 //Todo: あとでLogを消す
-                Log.d("getLocation","isNetworkEnabled:${isNetworkEnabled()}")
-                Log.d("getLocation","NetworkPermission:${PermissionUtils.checkNetworkPermission(context)}")
+                Log.d("getLocation","isGPSEnabled:${isGPSEnabled()}")
+                Log.d("getLocation","GPSPermission:${PermissionUtils.checkGpsPermission(context)}")
                 //GPSプロバイダで実行
                 requestGPSLocation(MyLocationListener)
                 //Networkプロバイダで実行
