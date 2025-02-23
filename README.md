@@ -19,10 +19,10 @@ https://github.com/xxxx
 
 ## 開発環境
 ### 開発環境
-AndroidStudio 11.2.1
+Android Studio Ladybug | 2024.2.1 Patch 2
 
 ### 開発言語
-Kotlin
+Kotlin 2.0.0
 
 ### テーブル定義(ER図)などの設計ドキュメント（ウェブアプリ）
 
