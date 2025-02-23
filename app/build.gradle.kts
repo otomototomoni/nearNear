@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+    id ("kotlin-parcelize")
 }
 
 android {
@@ -58,7 +59,10 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
 
-    implementation("io.coil-kt:coil-compose:2.5.0")
+    //Gsonの追加
+    implementation (libs.gson)
+
+    implementation(libs.coil.compose)
 
     implementation (libs.google.play.services.location)
 

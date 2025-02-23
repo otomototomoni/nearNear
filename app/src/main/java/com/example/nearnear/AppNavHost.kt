@@ -14,6 +14,10 @@ import com.example.nearnear.Screen.SearchConditionScreen
 import com.example.nearnear.Screen.SearchResultScreen
 import com.example.nearnear.Screen.StoreDetailScreen
 import com.example.nearnear.Screen.TitleScreen
+import com.google.gson.Gson
+import java.net.URLDecoder
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
 /**
  * アプリケーションの画面遷移に関するコンポーザブル
@@ -34,26 +38,20 @@ fun AppNavHost(
         composable("title"){ TitleScreen(navController = navController) }
         composable("searchCondition"){ SearchConditionScreen(navController = navController,viewModel = viewModel) }
         composable("searchResult"){ SearchResultScreen(navController = navController,viewModel = viewModel) }
+        //DataClassを受け渡ししたいため、ParcelableTypeを使用している
+        //streDetaileを指定するときに("storeDetail/(DataClass)")とすることで指定したDataClassを渡せる。
         composable(
-            route = "storeDetail/{shopName}/{shopAddress}/{shopPhoto}/{shopOpen}",
+            "storeDetail/{shop}",
             arguments = listOf(
-                navArgument("shopName") { type = NavType.StringType},
-                navArgument("shopAddress") { type = NavType.StringType},
-                navArgument("shopPhoto") { type = NavType.StringType},
-                navArgument("shopOpen") { type = NavType.StringType}
+                navArgument("shop") { type = NavType.StringType},
             )
         ){ navBackStackEntry ->
-            val shopName = navBackStackEntry.arguments?.getString("shopName")
-            val shopAddress = navBackStackEntry.arguments?.getString("shopAddress")
-            val shopPhoto = navBackStackEntry.arguments?.getString("shopPhoto")
-            val shopOpen = navBackStackEntry.arguments?.getString("shopOpen")
+            //エンコードされたものを受け取る
+            val shop = navBackStackEntry.arguments?.getString("shop")
             StoreDetailScreen(
                 navController = navController,
                 viewModel = viewModel,
-                shopName = shopName?: "",
-                shopAddress = shopAddress?: "",
-                shopPhoto = shopPhoto?: "",
-                shopOpen = shopOpen?: ""
+                shop = shop
             )
         }
         composable("locationPermission") { LocationPermissionScreen(navController = navController,viewModel = viewModel) }

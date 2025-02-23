@@ -21,12 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.os.bundleOf
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.nearnear.HotPepperApi.ResponseData
 import com.example.nearnear.HotPepperApi.Shop
 import com.example.nearnear.MainViewModel
+import com.google.gson.Gson
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
@@ -91,12 +94,12 @@ fun ShopList(navController: NavHostController,shop: Shop){
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable {
-                val encodedShopName = URLEncoder.encode(shop.name, StandardCharsets.UTF_8.toString())
-                val encodedShopAddress = URLEncoder.encode(shop.address, StandardCharsets.UTF_8.toString())
-                val encodedShopPhoto = URLEncoder.encode(shop.photo.mobile.l, StandardCharsets.UTF_8.toString())
-                val encodedShopOpen = URLEncoder.encode(shop.open, StandardCharsets.UTF_8.toString())
+                //data classをJsonに変換
+                val shopJson = Gson().toJson(shop)
+                //Jsonをエンコード
+                val encodedShop = URLEncoder.encode(shopJson, StandardCharsets.UTF_8.toString())
                 navController.navigate(
-                    "storeDetail/${encodedShopName}/${encodedShopAddress}/${encodedShopPhoto}/${encodedShopOpen}"
+                    "storeDetail/${encodedShop}"
                 )
             }
     ){

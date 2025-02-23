@@ -1,5 +1,6 @@
 package com.example.nearnear.Screen
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -13,7 +14,11 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
+import com.example.nearnear.HotPepperApi.Shop
 import com.example.nearnear.MainViewModel
+import com.google.gson.Gson
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 /**
  * 店舗詳細画面
@@ -32,11 +37,13 @@ import com.example.nearnear.MainViewModel
 fun StoreDetailScreen(
     navController: NavHostController,
     viewModel: MainViewModel,
-    shopName: String,
-    shopAddress: String,
-    shopPhoto: String,
-    shopOpen: String
+    shop: String?
     ){
+    // URL デコード
+    val decodedJson = URLDecoder.decode(shop, StandardCharsets.UTF_8.toString())
+    // JSON をオブジェクトに戻す
+    val shop = Gson().fromJson(decodedJson, Shop::class.java)
+
     Scaffold(
         topBar = { Text("店舗詳細") },
         bottomBar = { Text("ボトムバー") }
@@ -46,13 +53,13 @@ fun StoreDetailScreen(
                 .fillMaxSize()
                 .padding(innerPadding)
         ){
-            Text(shopName)
+            Text(shop!!.name)
             AsyncImage(
-                model = shopPhoto,
+                model = shop.photo.mobile.l,
                 contentDescription = null
             )
-            Text(shopAddress)
-            Text(shopOpen)
+            Text(shop.address)
+            Text(shop.open)
 
             //testButton　ToDo：消す
             Button(
@@ -64,17 +71,13 @@ fun StoreDetailScreen(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun StoreDetailScreenPreview(){
-    val navController = rememberNavController()
-    val viewModel : MainViewModel = viewModel()
-    StoreDetailScreen(
-        navController,
-        viewModel,
-        "a",
-        "b",
-        "c",
-        "d"
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun StoreDetailScreenPreview(){
+//    val navController = rememberNavController()
+//    val viewModel : MainViewModel = viewModel()
+//    StoreDetailScreen(
+//        navController,
+//        viewModel,
+//    )
+//}

@@ -1,17 +1,16 @@
 package com.example.nearnear.HotPepperApi
 
-/*
- * Retrofitクライアントのレスポンスデータのクラス
- *
- * ToDo：何をしているのか調べる
- *  ホットペッパーAPIから孵されるJSONデータをマッピングするためのデータクラス
- *  ApiServiceでリクエストを送り、どのような情報が欲しいのかをここで定義する
- */
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-//APIレスポンス全体のデータクラス
-data class ResponseData (
+/*
+ * ホットペッパーAPIのレスポンに対して受け取るResponseの型
+ *
+ */
+data class ResponseData(
     val results: Results
 )
+
 
 data class Results(
     val shop: List<Shop>
@@ -32,6 +31,5 @@ data class Photo(
 )
 
 data class Mobile(
-    val l: String,
-    val s: String
+    val l: String, val s: String
 )
