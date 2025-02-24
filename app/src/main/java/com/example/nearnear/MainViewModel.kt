@@ -1,5 +1,6 @@
 package com.example.nearnear
 
+import android.location.Location
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.example.nearnear.HotPepperApi.ResponseData
@@ -17,8 +18,10 @@ import retrofit2.Response
  *  APIリクエストを実行するためMainViewModel
  */
 class MainViewModel : ViewModel() {
-    private val _responseData = MutableStateFlow<ResponseData?>(null)
+    val _responseLocation = MutableStateFlow<Location?>(null)
+    val responseLocation: StateFlow<Location?> = _responseLocation
 
+    private val _responseData = MutableStateFlow<ResponseData?>(null)
     // 外部から参照するための StateFlow
     val responseData: StateFlow<ResponseData?> = _responseData
 

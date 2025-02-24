@@ -88,6 +88,7 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
             //パーミッションが許可されていない場合はパーミッションを許可を求める画面へ遷移
             Button(
                 onClick = {
+                    println("KotlinVersion -> ${KotlinVersion.CURRENT}")
                     if(!PermissionUtils.checkGpsPermission(context)) {
                         Log.d("SearchConditionScreen.kt", "GPSパーミッションがオフです。")
                         navController.navigate("locationPermission")

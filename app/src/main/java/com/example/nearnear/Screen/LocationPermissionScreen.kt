@@ -33,10 +33,15 @@ import com.example.nearnear.MainViewModel
 @Composable
 fun LocationPermissionScreen(navController: NavHostController, viewModel: MainViewModel) {
     val context = LocalContext.current
+    //パーミッションが許可されるとtrue
     var permissionGranted by remember { mutableStateOf(false) }
-    var showPermissionRationale by remember { mutableStateOf(false) }
+    //今後表示しないを押したときにtrue.ボタンを表示し、設定画面からPermissionnを許可するよう促す
     var isPermanentlyDenied by remember { mutableStateOf(false) }
+    //その他。もう一度パーミッションの許可を要請する画面を表示させるボタンを表示
+    var showPermissionRationale by remember { mutableStateOf(false) }
 
+
+    //パーミッションの許可を求める
     val locationPermissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
@@ -57,6 +62,7 @@ fun LocationPermissionScreen(navController: NavHostController, viewModel: MainVi
         }
     }
 
+    //パーミッションが許可されたときに起動。検索画面に戻る
     LaunchedEffect(key1 = permissionGranted) {
         // アプリ起動時にパーミッションをチェック
         if (PermissionUtils.checkGpsPermission(context)) {
@@ -70,6 +76,8 @@ fun LocationPermissionScreen(navController: NavHostController, viewModel: MainVi
         }
     }
 
+    //isPermanentlyDeniedがtrueの場合に設定画面に飛べるボタンを表示
+    //showPermissionnPationaleが
     Column(
         modifier = Modifier
             .padding(16.dp)

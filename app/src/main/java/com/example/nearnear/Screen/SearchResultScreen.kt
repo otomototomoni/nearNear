@@ -49,6 +49,8 @@ import java.nio.charset.StandardCharsets
 fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel) {
     //viewModelからresponseDataを取得
     val responseData by viewModel.responseData.collectAsState()
+    //Todo:test
+    val responseLocation by viewModel.responseLocation.collectAsState()
 
     Scaffold(
         topBar = {Text("検索結果画面")},
@@ -62,6 +64,7 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
                 .verticalScroll(rememberScrollState())
             //スクロール可能にする
         ){
+            Text(text = "緯度：${responseLocation?.latitude}　経度：${responseLocation?.longitude}")
             //testButton　ToDo：消す
             Button(
                 onClick = {

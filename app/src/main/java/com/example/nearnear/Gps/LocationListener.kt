@@ -4,6 +4,7 @@ import android.location.LocationListener
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
+import com.example.nearnear.MainViewModel
 
 /*
  * LocationListenerをまとめておくところ
@@ -12,6 +13,8 @@ object MyLocationListener: LocationListener{
 
             //位置情報が更新された際に呼び出される
             override fun onLocationChanged(location: Location) {
+                val viewModel:MainViewModel = MainViewModel()
+                viewModel._responseLocation.value = location
                 Log.d("LocationListener","override fun onLocationChanged経度＝${location.latitude},緯度=${location.longitude}")
             }
 
