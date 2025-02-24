@@ -13,8 +13,6 @@ object MyLocationListener: LocationListener{
 
             //位置情報が更新された際に呼び出される
             override fun onLocationChanged(location: Location) {
-                val viewModel:MainViewModel = MainViewModel()
-                viewModel._responseLocation.value = location
                 Log.d("LocationListener","override fun onLocationChanged経度＝${location.latitude},緯度=${location.longitude}")
             }
 

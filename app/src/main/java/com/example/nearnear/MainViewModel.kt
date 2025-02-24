@@ -18,9 +18,6 @@ import retrofit2.Response
  *  APIリクエストを実行するためMainViewModel
  */
 class MainViewModel : ViewModel() {
-    val _responseLocation = MutableStateFlow<Location?>(null)
-    val responseLocation: StateFlow<Location?> = _responseLocation
-
     private val _responseData = MutableStateFlow<ResponseData?>(null)
     // 外部から参照するための StateFlow
     val responseData: StateFlow<ResponseData?> = _responseData

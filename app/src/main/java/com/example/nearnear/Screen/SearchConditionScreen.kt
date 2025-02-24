@@ -62,9 +62,6 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
     var range by remember { mutableStateOf(1) }
     var searchRadius by remember { mutableStateOf(300) }
 
-    //Todo:test
-    val responseLocation by viewModel.responseLocation.collectAsState()
-
     Scaffold(
         topBar = {Text("検索条件入力画面")},
         bottomBar = {Text("ボトムバー")}
@@ -92,7 +89,6 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
             //パーミッションが許可されていない場合はパーミッションを許可を求める画面へ遷移
             Button(
                 onClick = {
-                    println("KotlinVersion -> ${KotlinVersion.CURRENT}")
                     if(!PermissionUtils.checkGpsPermission(context)) {
                         Log.d("SearchConditionScreen.kt", "GPSパーミッションがオフです。")
                         navController.navigate("locationPermission")
@@ -107,8 +103,8 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                         )
                         // API リクエストを実行
                         val shops = viewModel.getShops(
-                            latitude = responseLocation?.latitude ?: 34.404896, // null：尾道駅の緯度
-                            longitude = responseLocation?.longitude ?: 133.193555, // null：尾道駅の経度
+                            latitude = location?.latitude ?: 34.404896, // null：尾道駅の緯度
+                            longitude = location?.longitude ?: 133.193555, // null：尾道駅の経度
                             range = range
                         )
                         navController.navigate("searchResult")
