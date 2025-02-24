@@ -16,6 +16,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -61,6 +62,9 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
     var range by remember { mutableStateOf(1) }
     var searchRadius by remember { mutableStateOf(300) }
 
+    //Todo:test
+    val responseLocation by viewModel.responseLocation.collectAsState()
+
     Scaffold(
         topBar = {Text("検索条件入力画面")},
         bottomBar = {Text("ボトムバー")}
@@ -103,8 +107,8 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                         )
                         // API リクエストを実行
                         val shops = viewModel.getShops(
-                            latitude = location?.latitude ?: 34.404896, // null：尾道駅の緯度
-                            longitude = location?.longitude ?: 133.193555, // null：尾道駅の経度
+                            latitude = responseLocation?.latitude ?: 34.404896, // null：尾道駅の緯度
+                            longitude = responseLocation?.longitude ?: 133.193555, // null：尾道駅の経度
                             range = range
                         )
                         navController.navigate("searchResult")
