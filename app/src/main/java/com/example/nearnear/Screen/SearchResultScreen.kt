@@ -1,7 +1,10 @@
 package com.example.nearnear.Screen
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,14 +14,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
+import androidx.compose.ui.layout.ContentScale.Companion.FillWidth
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.os.bundleOf
@@ -29,6 +38,7 @@ import coil.compose.AsyncImage
 import com.example.nearnear.HotPepperApi.ResponseData
 import com.example.nearnear.HotPepperApi.Shop
 import com.example.nearnear.MainViewModel
+import com.example.nearnear.R
 import com.google.gson.Gson
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -51,32 +61,86 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
     val responseData by viewModel.responseData.collectAsState()
 
     Scaffold(
-        topBar = {Text("検索結果画面")},
-        bottomBar = {Text("ボトムバー")}
+        bottomBar = {
+            BottomAppBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("【画像提供：ホットペッパー グルメ】")
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        painter = painterResource(id = R.drawable.hotpepper_s),
+                        contentDescription = null,
+                        contentScale = FillWidth,
+                    )
+                }
+            }
+        }
     ) { innerPadding ->
-        Column(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
-                .verticalScroll(rememberScrollState())
-            //スクロール可能にする
-        ){
-            //testButton　ToDo：消す
-            Button(
-                onClick = {
-                    navController.navigate("searchCondition")
-                }
-            ) {
-                Text("前の画面に戻る")
-            }
 
-            if(responseData != null){
-                responseData!!.results.shop.forEach { shop ->
-                    ShopList(navController,shop)
+        ) {
+            //背景
+            Image(
+                painter = painterResource(id = R.drawable.background),
+                contentDescription = null,
+                contentScale = FillBounds,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(top = 16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                //testButton　ToDo：消す
+                Button(
+                    onClick = {
+                        navController.navigate("searchCondition")
+                    }
+                ) {
+                    Text("前の画面に戻る")
                 }
-            }else{
-                Text("店情報取得中...しばらくお待ちください。")
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(16.dp)
+                        .clip(
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .border(
+                            width = 2.dp,
+                            color = Color.Blue,
+                            shape = RoundedCornerShape(16.dp)
+                        )
+                        .verticalScroll(rememberScrollState())
+                        .background(color = Color.White)
+                    //スクロール可能にする
+                ) {
+                    if (responseData != null) {
+                        responseData!!.results.shop.forEach { shop ->
+                            ShopList(navController, shop)
+                        }
+                    } else {
+                        Text(
+                            text = "店情報取得中...しばらくお待ちください。",
+                            modifier = Modifier
+                                .padding(16.dp)
+                        )
+                    }
+                }
             }
         }
     }
@@ -88,9 +152,12 @@ fun ShopList(navController: NavHostController,shop: Shop){
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp)
+            .clip(
+                shape = RoundedCornerShape(16.dp)
+            )
             .border(
-                width = 1.dp,
-                color = Color.Black,
+                width = 2.dp,
+                color = Color.Blue,
                 shape = RoundedCornerShape(16.dp)
             )
             .clickable {
@@ -102,6 +169,7 @@ fun ShopList(navController: NavHostController,shop: Shop){
                     "storeDetail/${encodedShop}"
                 )
             }
+            .background(color = Color.White)
     ){
         Row(
             modifier = Modifier
