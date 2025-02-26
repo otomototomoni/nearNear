@@ -21,11 +21,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -149,18 +152,39 @@ fun SerchRadius(range: Int):Int{
 fun DraggableImage():Float {
     // 円の中心のX座標を管理する状態変数
     var circleX by remember { mutableStateOf(0f) }
+    //canvasの横のサイズ
+    var canvasWidth by remember { mutableStateOf(0f) }
+    //Imageの横のサイズ
+    var imageWidth by remember { mutableStateOf(0)}
 
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(16.dp),
+        contentAlignment = Alignment.CenterStart
     ) {
+        Canvas(
+            modifier = Modifier
+                .fillMaxWidth()
+        ){
+            canvasWidth = size.width
+            val canvasHeight = size.height
+            drawLine(
+                start = Offset(0f, canvasHeight / 2),
+                end = Offset(canvasWidth, canvasHeight / 2),
+                color = Color.Magenta,
+                strokeWidth = 2.dp.toPx()
+            )
+        }
         Image(
             painter = painterResource(id = R.drawable.cat_fish_run),
             contentDescription = null,
             modifier = Modifier
-                .offset { IntOffset(circleX.roundToInt(), 0) }
                 .size(100.dp)
+                .onGloballyPositioned {coordinates ->
+                    imageWidth = coordinates.size.width
+                }
+                .offset { IntOffset(circleX.roundToInt()-(imageWidth/2), 0) }
                 .pointerInput(Unit) {
                     detectHorizontalDragGestures { change, dragAmount ->
                         change.consume()
@@ -170,7 +194,7 @@ fun DraggableImage():Float {
         )
     }
     if(circleX < 0f) circleX = 0f
-    if(circleX > 500f) circleX = 500f
+    if(circleX > canvasWidth) circleX = canvasWidth
     return circleX
 }
 
