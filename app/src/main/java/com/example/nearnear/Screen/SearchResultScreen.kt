@@ -21,6 +21,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -60,7 +63,14 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
     //viewModelからresponseDataを取得
     val responseData by viewModel.responseData.collectAsState()
 
+    //ページングするための変数
+    var startIndex by remember { mutableStateOf(1) }
+    var endIndex by remember { mutableStateOf(5) }
+    //shopListが初期化されるまで6の値を持ち、shopListが初期化されるとその値がこの中に入る。
+    var shopListSize by remember { mutableStateOf(6) }
+
     Scaffold(
+        //ホットペッパーAPIのクレジットを表示
         bottomBar = {
             BottomAppBar(
                 modifier = Modifier
@@ -83,6 +93,7 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
             }
         }
     ) { innerPadding ->
+
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -97,7 +108,6 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
                 modifier = Modifier
                     .fillMaxSize()
             )
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -105,14 +115,51 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                //testButton　ToDo：消す
-                Button(
-                    onClick = {
-                        navController.navigate("searchCondition")
-                    }
+                //上部のボタンを表示
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text("前の画面に戻る")
+                    //前のリストを表示
+                    Button(
+                        onClick = {
+                            startIndex -= 5
+                            endIndex -= 5
+                            if(startIndex < 1){
+                                startIndex = 1
+                                endIndex = 5
+                            }
+                        },
+                        enabled = startIndex > 1
+                    ) {
+                        Text("前の商品を表示")
+                    }
+                    //検索画面へ戻るボタンを
+                    Button(
+                        onClick = {
+                            navController.navigate("searchCondition")
+                        }
+                    ) {
+                        Text("前の画面に戻る")
+                    }
+
+                    //次のリストを表示
+                    Button(
+                        onClick = {
+                            startIndex += 5
+                            endIndex += 5
+                            if(startIndex > shopListSize){
+                                endIndex = shopListSize
+                            }
+                        },
+                        enabled = endIndex < shopListSize
+                    ) {
+                        Text("次の商品を表示")
+                    }
                 }
+
+                //飲食店情報尾のリストを表示するところ
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -130,7 +177,14 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
                     //スクロール可能にする
                 ) {
                     if (responseData != null) {
-                        responseData!!.results.shop.forEach { shop ->
+                        //データをスライスする
+                        val shopList = responseData!!.results.shop
+                        shopListSize = shopList.size
+                        val slicedShopList = shopList.subList(
+                            startIndex,
+                            endIndex.coerceAtMost(shopList.size)
+                        )
+                        slicedShopList.forEach { shop ->
                             ShopList(navController, shop)
                         }
                     } else {
