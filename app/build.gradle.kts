@@ -62,10 +62,10 @@ dependencies {
     //Gsonの追加
     implementation (libs.gson)
 
-    implementation(libs.coil.compose)
-
+    //fused location providerの追加
     implementation (libs.google.play.services.location)
 
+    implementation(libs.coil.compose)
     //api実装のために記述したもの
     //Retrofit本体
     implementation(libs.retrofit)

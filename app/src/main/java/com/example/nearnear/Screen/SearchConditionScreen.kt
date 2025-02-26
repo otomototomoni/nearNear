@@ -31,12 +31,11 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.nearnear.Gps.AlertDialogUtils
 import com.example.nearnear.Gps.LocationUtils
 import com.example.nearnear.Gps.PermissionUtils
+import com.example.nearnear.Gps.Provider
 import com.example.nearnear.MainViewModel
 import com.example.nearnear.R
 import kotlin.math.roundToInt
@@ -53,11 +52,14 @@ import kotlin.math.roundToInt
  */
 @Composable
 fun SearchConditionScreen(context:Context,navController: NavHostController,viewModel: MainViewModel){
+    //Activity contextを代入
+    val context : Context = context
+
     //LocationUtilsクラスのインスタンス作成
     val LocationUtils = LocationUtils()
-    val context : Context = context
     LocationUtils.init(context)
 
+    //ToDo:検索範囲の取得をもっときれいにできるようにする
     var imageValue by remember { mutableStateOf(0f) }
     var range by remember { mutableStateOf(1) }
     var searchRadius by remember { mutableStateOf(300) }
@@ -78,11 +80,10 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
             imageValue = DraggableImage()
             range = Range(imageValue)
             searchRadius = SerchRadius(range)
-
             Text(
                 modifier = Modifier
                     .padding(16.dp),
-                text = "検索半径：${searchRadius}m"
+                text = "検索範囲：${searchRadius}m"
             )
 
             //GPSかネットワークで位置情報を取得し、ホットペッパーAPIから店情報を取得。次の画面へ遷移
@@ -92,19 +93,18 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
                     if(!PermissionUtils.checkGpsPermission(context)) {
                         Log.d("SearchConditionScreen.kt", "GPSパーミッションがオフです。")
                         navController.navigate("locationPermission")
-                    }else if(!LocationUtils.isGPSEnabled()) {
-                        Log.d("SearchConditionScreen.kt", "GPSがオフです。")
+                    }else if (!Provider.isGPSProviderEnabled(context)){
                         AlertDialogUtils.promptUserToEnableGPS(context)
                     }else {
                         //GPSから現在地の取得。LocationUtilsオブジェクトのメソッドを実行
-                        val location = LocationUtils.getLocation(context)
+                        val location = LocationUtils.getLocation()
                         Log.d(
                             "SearchConditionScreen.kt","GPSがオンです。\n緯度は${location?.latitude}、経度は${location?.longitude}です。"
                         )
                         // API リクエストを実行
                         val shops = viewModel.getShops(
-                            latitude = location?.latitude ?: 35.680959, // null：尾道駅の緯度
-                            longitude = location?.longitude ?: 139.767306, // null：尾道駅の経度
+                            latitude = location?.latitude ?: 34.404896, // null：尾道駅の緯度
+                            longitude = location?.longitude ?: 133.193555, // null：尾道駅の経度
                             range = range
                         )
                         navController.navigate("searchResult")

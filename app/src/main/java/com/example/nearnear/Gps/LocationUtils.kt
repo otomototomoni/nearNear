@@ -2,100 +2,90 @@ package com.example.nearnear.Gps
 
 import android.content.Context
 import android.location.Location
-import android.location.LocationListener
-import android.location.LocationManager
 import android.util.Log
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
+import com.google.android.gms.location.Priority
 
 /*
- * locationManagerが重複していたため、objectで定義
+ * Fused Location Provider APIで現在地を取得
+ * インスタンスを作成して、LocationUtils.init(context)と定義することで初期化ができる
  */
 class LocationUtils{
-    //現在地の取得するための準備。位置情報サービスを管理するためのLocationManagerオブジェクトの取得
-    private lateinit var locationManager: LocationManager
-
-    //locationManagerの初期化
-    fun init(context: Context){
-        locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
-    }
-
-    //GPSプロバイダが有効になっているか確認するメソッド
-    fun isGPSEnabled(): Boolean{
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-    }
-
-    //ネットワークプロバイダが有効になっているか確認
-    fun isNetworkEnabled(): Boolean{
-        return locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-    }
-
-    //GPSの位置情報を取得するリクエスト
-    fun requestGPSLocation(locationListener: LocationListener){
-        try {
-            locationManager.requestLocationUpdates(
-                LocationManager.GPS_PROVIDER,
-                0,
-                0f,
-                locationListener
-            )
-            Log.d("LocationUtils.kt requestGPSLocation()","requestLocationUpdatesが実行されました。")//ToDO:後で消す
-        } catch (e: SecurityException){
-            Log.e("LocationUtils.kt requestGPSLocation()","SecurityException: ${e.message}")
-        }
-    }
-
-    //ネットワークでの位置情報を取得するリクエスト
-    fun requestNetworkLocation(locationListener: LocationListener){
-        try {
-            locationManager.requestLocationUpdates(
-                LocationManager.NETWORK_PROVIDER,
-                0,
-                0f,
-                locationListener
-            )
-            Log.d("LocationUtils.kt requestNetworkLocation()","requestLocationUpdatesが実行されました。")//ToDO:後で消す
-        } catch (e: SecurityException){
-            Log.e("LocationUtils.kt requestNetworkLocation()","SecurityException: ${e.message}")
-        }
-    }
-
-    //ネットワークプロバイダを使用して最後に取得した位置情報を取得する
-    fun getLastKnownLocationNetwork(context: Context): Location? {
-        PermissionUtils.checkNetworkPermission(context)
-        return locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER)
-    }
-
-    //GPSプロバイダを使用して最後に取得した位置情報を取得
-    fun getLastKnownLocationGPS(context: Context): Location? {
-        PermissionUtils.checkGpsPermission(context)
-        return locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER)
-    }
-
-    //最後に取得した位置情報を取得する一連の流れメソッド
-    fun getLocation(context: Context): Location? {
-        //パーミッション（権限）の確認　。許可されているなら実行
-        if(PermissionUtils.checkGpsPermission(context)) {
-            //GPSが有効になっているかの確認。無効ならアラートを表示。有効なら現在地を取得
-            if((!isGPSEnabled() == true) && (!isNetworkEnabled() == true)){
-                AlertDialogUtils.promptUserToEnableGPS(context)
-                return null
-            }else {
-                //Todo: あとでLogを消す
-                Log.d("getLocation","isNetworkEnabled:${isNetworkEnabled()}")
-                Log.d("getLocation","NetworkPermission:${PermissionUtils.checkNetworkPermission(context)}")
-                //GPSプロバイダで実行
-                requestGPSLocation(MyLocationListener)
-                //Networkプロバイダで実行
-                requestNetworkLocation(MyLocationListener)
-                //最後に取得したGPS情報を受け取る。今までに位置情報を取得していないならnullもしくはエラーを吐く
-                //GPSで位置情報を受け取れた場合にはGPS、そうでなければネットワークで位置情報を受け取る
-                if(getLastKnownLocationGPS(context) != null){
-                    return getLastKnownLocationGPS(context)
-                }else{
-                    return getLastKnownLocationNetwork(context)
-                }
+    //現在地の取得するFused Location Client
+    private lateinit var fusedLocationClient : FusedLocationProviderClient
+    private lateinit var context : Context
+    //LocationRequestの定義：GPSとネットワークプロバイダを使用した高精度の位置情報取得。(1秒間隔)
+    private val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000).build()
+    //LocationCallBack：位置情報を取得した際に実行したい処理
+    private val locationCallBack = object : LocationCallback() {
+        override fun onLocationResult( locationResult: LocationResult){
+            for(location in locationResult.locations){
+                Log.d("位置情報",location.toString())
+                Log.d("位置情報：緯度", location.latitude.toString())
+                Log.d("位置情報：軽度", location.longitude.toString())
             }
+        }
+    }
+
+    //Fused Location Clientの初期化
+    fun init(activityContext: Context){
+        context = activityContext
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(context)
+    }
+
+    //最後に取得された位置情報を取得する
+    fun getLastLocation():Location?{
+        var getLastLocation : Location? = null
+        //パーミッションが許可されているか確認
+        if(PermissionUtils.checkGpsPermission(context) != true && PermissionUtils.checkNetworkPermission(context) != true){
+            Log.d("getLastLocation","パーミッションが許可されていません。")
         }else{
-            Log.d("LocationUtils.kt getLocation()","GPSのパーミッションが許可されていません。")
+            //位置情報が取得できたかどうかをLogで出力
+            fusedLocationClient.lastLocation
+                .addOnSuccessListener { location : Location? ->
+                    location?.let{
+                        getLastLocation = location
+                        Log.d("getLastLocation","緯度は${location.latitude}、経度は${location.longitude}です")
+                    }?:run{
+                        Log.d("getLastLocation","位置情報がnullです。")
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.d("getLastLocation","位置情報の取得に失敗しました。エラー：${e.message}")
+                }
+        }
+        return getLastLocation
+    }
+
+    //新たに位置情報の更新を依頼する
+    fun requestLocationUpdates(){
+        //パーミッションチェックを行わないとrequestLocationUpdatesを実行できない
+        if(PermissionUtils.checkGpsPermission(context)) {
+            fusedLocationClient.requestLocationUpdates(
+                locationRequest,
+                locationCallBack,
+                //null：UIの更新を直接行えない。Looper.getMainLooper()：UIの更新をハンドラーに任せる
+                null
+            )
+        }
+    }
+
+    //観測を停止
+    fun removeLocationUpdates(){
+        fusedLocationClient.removeLocationUpdates(locationCallBack)
+    }
+
+    //Screenで実行する処理：位置情報が取得できたらそのまま返す。そうでなければリクエストをする
+    fun getLocation():Location?{
+        if(getLastLocation() != null){
+//            removeLocationUpdates()
+            return getLastLocation()
+        }else{
+            requestLocationUpdates()
             return null
         }
     }
