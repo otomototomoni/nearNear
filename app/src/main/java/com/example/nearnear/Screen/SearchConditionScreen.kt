@@ -52,10 +52,10 @@ import kotlin.math.roundToInt
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewModel){
+fun SearchConditionScreen(context:Context,navController: NavHostController,viewModel: MainViewModel){
     //LocationUtilsクラスのインスタンス作成
     val LocationUtils = LocationUtils()
-    val context : Context = LocalContext.current
+    val context : Context = context
     LocationUtils.init(context)
 
     var imageValue by remember { mutableStateOf(0f) }
@@ -103,8 +103,8 @@ fun SearchConditionScreen(navController: NavHostController,viewModel: MainViewMo
                         )
                         // API リクエストを実行
                         val shops = viewModel.getShops(
-                            latitude = location?.latitude ?: 34.404896, // null：尾道駅の緯度
-                            longitude = location?.longitude ?: 133.193555, // null：尾道駅の経度
+                            latitude = location?.latitude ?: 35.680959, // null：尾道駅の緯度
+                            longitude = location?.longitude ?: 139.767306, // null：尾道駅の経度
                             range = range
                         )
                         navController.navigate("searchResult")
@@ -174,9 +174,9 @@ fun DraggableImage():Float {
     return circleX
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SearchConditionScreenPreview(){
-    val navController = rememberNavController()
-    SearchConditionScreen(navController,viewModel = viewModel())
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun SearchConditionScreenPreview(){
+//    val navController = rememberNavController()
+//    SearchConditionScreen(navController,viewModel = viewModel())
+//}
