@@ -4,17 +4,27 @@ import android.content.Context
 import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.TopAppBarDefaults.topAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -29,13 +39,23 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale.Companion.Crop
+import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
+import androidx.compose.ui.layout.ContentScale.Companion.FillWidth
+import androidx.compose.ui.layout.ContentScale.Companion.Fit
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.ExtraBold
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.example.nearnear.Gps.AlertDialogUtils
 import com.example.nearnear.Gps.LocationUtils
 import com.example.nearnear.Gps.PermissionUtils
@@ -67,46 +87,86 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
     var range by remember { mutableStateOf(1) }
 
     Scaffold(
-        topBar = {Text("検索条件入力画面")},
-        bottomBar = {Text("ボトムバー")}
+        //一番下に出てくるバー
+        bottomBar = {
+            BottomAppBar(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text("【画像提供：ホットペッパー グルメ】")
+                    Image(
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        painter = painterResource(id = R.drawable.hotpepper_s),
+                        contentDescription = null,
+                        contentScale = FillWidth,
+                    )
+                }
+            }
+        }
     ) { innerPadding ->
-        Column(
+        //背景を入れるためのBoxコンポーザブル
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(16.dp)
-        ){
-            Text(text = "検索条件を入力してください。")
+        ) {
+            //背景
+            Image(
+                painter = painterResource(id = R.drawable.background),
+                contentDescription = null,
+                contentScale = FillBounds,
+                modifier = Modifier
+                    .fillMaxSize()
+            )
 
-            //横にスライドできるバーを設置
-            range = LocationDraggableImage()
-
-            //GPSかネットワークで位置情報を取得し、ホットペッパーAPIから店情報を取得。次の画面へ遷移
-            //パーミッションが許可されていない場合はパーミッションを許可を求める画面へ遷移
-            Button(
-                onClick = {
-                    if(!PermissionUtils.checkGpsPermission(context)) {
-                        Log.d("SearchConditionScreen.kt", "GPSパーミッションがオフです。")
-                        navController.navigate("locationPermission")
-                    }else if (!Provider.isGPSProviderEnabled(context)){
-                        AlertDialogUtils.promptUserToEnableGPS(context)
-                    }else {
-                        //GPSから現在地の取得。LocationUtilsオブジェクトのメソッドを実行
-                        val location = LocationUtils.getLocation()
-                        Log.d(
-                            "SearchConditionScreen.kt","GPSがオンです。\n緯度は${location?.latitude}、経度は${location?.longitude}です。"
-                        )
-                        // API リクエストを実行
-                        val shops = viewModel.getShops(
-                            latitude = location?.latitude ?: 34.404896, // null：尾道駅の緯度
-                            longitude = location?.longitude ?: 133.193555, // null：尾道駅の経度
-                            range = range
-                        )
-                        navController.navigate("searchResult")
-                    }
-                }
+            //背景の前にあるボタンなど
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("検索")
+                //横にスライドできるバーを設置
+                range = LocationDraggableImage()
+
+                //GPSかネットワークで位置情報を取得し、ホットペッパーAPIから店情報を取得。次の画面へ遷移
+                //パーミッションが許可されていない場合はパーミッションを許可を求める画面へ遷移
+                Image(
+                    painter = painterResource(id = R.drawable.search_button),
+                    contentDescription = null,
+                    contentScale = Crop,
+                    modifier = Modifier
+                        .padding(top = 32.dp)
+                        .clickable {
+                        if (!PermissionUtils.checkGpsPermission(context)) {
+                            Log.d("SearchConditionScreen.kt", "GPSパーミッションがオフです。")
+                            navController.navigate("locationPermission")
+                        } else if (!Provider.isGPSProviderEnabled(context)) {
+                            AlertDialogUtils.promptUserToEnableGPS(context)
+                        } else {
+                            //GPSから現在地の取得。LocationUtilsオブジェクトのメソッドを実行
+                            val location = LocationUtils.getLocation()
+                            Log.d(
+                                "SearchConditionScreen.kt",
+                                "GPSがオンです。\n緯度は${location?.latitude}、経度は${location?.longitude}です。"
+                            )
+                            // API リクエストを実行
+                            val shops = viewModel.getShops(
+                                latitude = location?.latitude ?: 34.404896, // null：尾道駅の緯度
+                                longitude = location?.longitude ?: 133.193555, // null：尾道駅の経度
+                                range = range
+                            )
+                            navController.navigate("searchResult")
+                        }
+                    }
+                )
             }
         }
     }
@@ -126,7 +186,10 @@ fun LocationDraggableImage():Int {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
+            .padding(
+                start = 48.dp,
+                end = 48.dp
+            ),
         contentAlignment = Alignment.CenterStart
     ) {
         //横に長い線の画像
@@ -136,20 +199,20 @@ fun LocationDraggableImage():Int {
             contentScale = Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .onGloballyPositioned {coordinates ->
+                .onGloballyPositioned { coordinates ->
                     horizonBarWidth = coordinates.size.width
                 }
         )
         //走っている猫の画像。横にスライドできるようになっている。
         Image(
-            painter = painterResource(id = R.drawable.cat_fish_run),
+            painter = painterResource(id = R.drawable.cat_running),
             contentDescription = null,
             contentScale = Crop,
             modifier = Modifier
-                .onGloballyPositioned {coordinates ->
+                .onGloballyPositioned { coordinates ->
                     catImageWidth = coordinates.size.width
                 }
-                .offset { IntOffset(catX.roundToInt()-(catImageWidth/2), 0) }
+                .offset { IntOffset(catX.roundToInt() - (catImageWidth / 2), 0) }
                 .pointerInput(Unit) {
                     detectHorizontalDragGestures { change, dragAmount ->
                         change.consume()
@@ -187,18 +250,34 @@ fun SearchRangeText(range: Float,imageWidth: Int): Int{
         ApiRange = 5
     }
 
-    Text(
+    Box(
         modifier = Modifier
-            .padding(16.dp),
-        text = "検索範囲：${searchRange}m"
-    )
+            .fillMaxWidth()
+            .padding(
+                top = 8.dp,
+                bottom = 8.dp,
+                start = 16.dp,
+                end = 16.dp
+            ),
+        contentAlignment = Alignment.CenterEnd
+    ) {
+        Text(
+            text = "検索範囲：${searchRange}m",
+            fontWeight = FontWeight.ExtraBold,
+            fontFamily = FontFamily.SansSerif,
+            fontSize = 20.sp,
+            fontStyle = FontStyle.Normal,
+            color = Color.Black,
+        )
+    }
 
     return ApiRange
 }
 
-//@Preview(showBackground = true)
-//@Composable
-//fun SearchConditionScreenPreview(){
-//    val navController = rememberNavController()
-//    SearchConditionScreen(navController,viewModel = viewModel())
-//}
+@Preview(showBackground = true)
+@Composable
+fun SearchConditionScreenPreview(){
+    val context : Context = LocalContext.current
+    val navController = rememberNavController()
+    SearchConditionScreen(context,navController,viewModel = viewModel())
+}

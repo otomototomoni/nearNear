@@ -78,6 +78,8 @@ dependencies {
     //ViewModelを使用するためのもの
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.contentpager)
+    implementation(libs.androidx.animation.core.android)
+    implementation(libs.androidx.animation.core.android)
     //
 
     testImplementation(libs.junit)
