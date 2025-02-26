@@ -62,10 +62,8 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
     val LocationUtils = LocationUtils()
     LocationUtils.init(context)
 
-    //ToDo:検索範囲の取得をもっときれいにできるようにする
-    var imageValue by remember { mutableStateOf(0f) }
+    //検索範囲
     var range by remember { mutableStateOf(1) }
-    var searchRadius by remember { mutableStateOf(300) }
 
     Scaffold(
         topBar = {Text("検索条件入力画面")},
@@ -80,14 +78,7 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
             Text(text = "検索条件を入力してください。")
 
             //横にスライドできるバーを設置
-            imageValue = DraggableImage()
-            range = Range(imageValue)
-            searchRadius = SerchRadius(range)
-            Text(
-                modifier = Modifier
-                    .padding(16.dp),
-                text = "検索範囲：${searchRadius}m"
-            )
+            range = LocationDraggableImage()
 
             //GPSかネットワークで位置情報を取得し、ホットペッパーAPIから店情報を取得。次の画面へ遷移
             //パーミッションが許可されていない場合はパーミッションを許可を求める画面へ遷移
@@ -120,42 +111,16 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
     }
 }
 
-fun Range(imageValue: Float):Int{
-    if(imageValue < 100){
-        return 1
-    }else if(imageValue < 200){
-        return 2
-    }else if(imageValue < 300){
-        return 3
-    }else if(imageValue < 400){
-        return 4
-    }else{
-        return 5
-    }
-}
-
-fun SerchRadius(range: Int):Int{
-    if(range == 1){
-        return 300
-    }else if(range == 2){
-        return 500
-    }else if(range == 3){
-        return 1000
-    }else if(range == 4){
-        return 2000
-    }else{
-        return 3000
-    }
-}
-
 @Composable
-fun DraggableImage():Float {
-    // 円の中心のX座標を管理する状態変数
-    var circleX by remember { mutableStateOf(0f) }
-    //canvasの横のサイズ
-    var canvasWidth by remember { mutableStateOf(0f) }
+fun LocationDraggableImage():Int {
+
+    // 猫のX座標を管理する状態変数
+    var catX by remember { mutableStateOf(0f) }
+    //横長のバーの横のサイズ
+    var horizonBarWidth by remember { mutableStateOf(0) }
+
     //Imageの横のサイズ
-    var imageWidth by remember { mutableStateOf(0)}
+    var catImageWidth by remember { mutableStateOf(0)}
 
     Box(
         modifier = Modifier
@@ -163,39 +128,71 @@ fun DraggableImage():Float {
             .padding(16.dp),
         contentAlignment = Alignment.CenterStart
     ) {
-        Canvas(
+        //横に長い線の画像
+        Image(
+            painter = painterResource(id = R.drawable.current_location_horizonbar),
+            contentDescription = null,
             modifier = Modifier
                 .fillMaxWidth()
-        ){
-            canvasWidth = size.width
-            val canvasHeight = size.height
-            drawLine(
-                start = Offset(0f, canvasHeight / 2),
-                end = Offset(canvasWidth, canvasHeight / 2),
-                color = Color.Magenta,
-                strokeWidth = 2.dp.toPx()
-            )
-        }
+                .size(100.dp)
+                .onGloballyPositioned {coordinates ->
+                    horizonBarWidth = coordinates.size.width
+                }
+        )
+        //走っている猫の画像。横にスライドできるようになっている。
         Image(
             painter = painterResource(id = R.drawable.cat_fish_run),
             contentDescription = null,
             modifier = Modifier
                 .size(100.dp)
                 .onGloballyPositioned {coordinates ->
-                    imageWidth = coordinates.size.width
+                    catImageWidth = coordinates.size.width
                 }
-                .offset { IntOffset(circleX.roundToInt()-(imageWidth/2), 0) }
+                .offset { IntOffset(catX.roundToInt()-(catImageWidth/2), 0) }
                 .pointerInput(Unit) {
                     detectHorizontalDragGestures { change, dragAmount ->
                         change.consume()
-                        circleX += dragAmount
+                        catX += dragAmount
                     }
                 }
         )
     }
-    if(circleX < 0f) circleX = 0f
-    if(circleX > canvasWidth) circleX = canvasWidth
-    return circleX
+    if(catX < 0f) catX = 0f
+    if(catX > horizonBarWidth) catX = horizonBarWidth.toFloat()
+    return SearchRangeText(catX,horizonBarWidth)
+}
+
+//猫を移動させた距離に応じて検索範囲を表示
+@Composable
+fun SearchRangeText(range: Float,imageWidth: Int): Int{
+    //表示する検索範囲
+    var searchRange by remember { mutableStateOf(0) }
+    var ApiRange by remember { mutableStateOf(1) }
+
+    if(imageWidth*0.25 > range){
+        searchRange = 300
+        ApiRange = 1
+    }else if(imageWidth*0.5 > range) {
+        searchRange = 500
+        ApiRange = 2
+    }else if(imageWidth*0.75 > range) {
+        searchRange = 1000
+        ApiRange = 3
+    }else if(imageWidth > range) {
+        searchRange = 2000
+        ApiRange = 4
+    }else {
+        searchRange = 3000
+        ApiRange = 5
+    }
+
+    Text(
+        modifier = Modifier
+            .padding(16.dp),
+        text = "検索範囲：${searchRange}m"
+    )
+
+    return ApiRange
 }
 
 //@Preview(showBackground = true)
