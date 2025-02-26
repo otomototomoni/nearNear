@@ -28,6 +28,7 @@ import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.LinearGradientShader
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -132,9 +133,9 @@ fun LocationDraggableImage():Int {
         Image(
             painter = painterResource(id = R.drawable.current_location_horizonbar),
             contentDescription = null,
+            contentScale = Crop,
             modifier = Modifier
                 .fillMaxWidth()
-                .size(100.dp)
                 .onGloballyPositioned {coordinates ->
                     horizonBarWidth = coordinates.size.width
                 }
@@ -143,8 +144,8 @@ fun LocationDraggableImage():Int {
         Image(
             painter = painterResource(id = R.drawable.cat_fish_run),
             contentDescription = null,
+            contentScale = Crop,
             modifier = Modifier
-                .size(100.dp)
                 .onGloballyPositioned {coordinates ->
                     catImageWidth = coordinates.size.width
                 }
