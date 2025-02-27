@@ -20,7 +20,7 @@ import com.example.nearnear.R
 import kotlinx.coroutines.delay
 
 @Composable
-fun titleScreen(navController: NavHostController){
+fun TitleScreen(navController: NavHostController){
     Column(
         modifier = Modifier
             .fillMaxSize()

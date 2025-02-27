@@ -14,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 
 @Composable
-fun TopButtons(startIndex: Int, endIndex: Int, shopListSize: Int,navController: NavHostController): Pair<Int,Int>{
+fun topButtons(startIndex: Int, endIndex: Int, shopListSize: Int,navController: NavHostController): Pair<Int,Int>{
     var startIndex by remember { mutableStateOf(startIndex) }
     var endIndex by remember { mutableStateOf(endIndex) }
     //上部のボタンを表示

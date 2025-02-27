@@ -56,7 +56,7 @@ import java.nio.charset.StandardCharsets
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun searchResultScreen(navController: NavHostController,viewModel: MainViewModel) {
+fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel) {
     //背景やBottomBarをまとめてあるクラスのインスタンスを作成
     val ScreenUtils = ScreenUtils()
 
@@ -74,7 +74,7 @@ fun searchResultScreen(navController: NavHostController,viewModel: MainViewModel
     Scaffold(
         //ホットペッパーAPIのクレジットを表示
         bottomBar = {
-            ScreenUtils.bottomBar()
+            ScreenUtils.BottomBar()
         }
     ) { innerPadding ->
 
@@ -85,7 +85,7 @@ fun searchResultScreen(navController: NavHostController,viewModel: MainViewModel
 
         ) {
             //背景
-            ScreenUtils.backGround()
+            ScreenUtils.BackGround()
 
             Column(
                 modifier = Modifier
@@ -96,7 +96,7 @@ fun searchResultScreen(navController: NavHostController,viewModel: MainViewModel
             ) {
 
                 //上部の画面遷移やページングを行うボタン
-                val indexPair: Pair<Int, Int> = TopButtons(startIndex, endIndex, shopListSize, navController)
+                val indexPair: Pair<Int, Int> = topButtons(startIndex, endIndex, shopListSize, navController)
                 startIndex = indexPair.first
                 endIndex = indexPair.second
 
@@ -145,5 +145,5 @@ fun searchResultScreen(navController: NavHostController,viewModel: MainViewModel
 @Composable
 fun SearchResultScreenPreview(){
     val navController = rememberNavController()
-    searchResultScreen(navController,viewModel = viewModel())
+    SearchResultScreen(navController,viewModel = viewModel())
 }

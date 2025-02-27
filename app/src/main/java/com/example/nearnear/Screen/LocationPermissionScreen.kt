@@ -31,7 +31,7 @@ import com.example.nearnear.MainActivity
 import com.example.nearnear.MainViewModel
 
 @Composable
-fun locationPermissionScreen(navController: NavHostController, viewModel: MainViewModel) {
+fun LocationPermissionScreen(navController: NavHostController, viewModel: MainViewModel) {
     val context = LocalContext.current
     //パーミッションが許可されるとtrue
     var permissionGranted by remember { mutableStateOf(false) }

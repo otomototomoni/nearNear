@@ -57,7 +57,7 @@ import kotlin.math.roundToInt
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun searchConditionScreen(context:Context,navController: NavHostController,viewModel: MainViewModel){
+fun SearchConditionScreen(context:Context,navController: NavHostController,viewModel: MainViewModel){
     //Activity contextを代入
     val context : Context = context
 
@@ -74,7 +74,7 @@ fun searchConditionScreen(context:Context,navController: NavHostController,viewM
     Scaffold(
         //一番下に出てくるホットペッパーAPIのクレジット
         bottomBar = {
-            ScreenUtils.bottomBar()
+            ScreenUtils.BottomBar()
         }
     ) { innerPadding ->
         //背景を入れるためのBoxコンポーザブル
@@ -84,7 +84,7 @@ fun searchConditionScreen(context:Context,navController: NavHostController,viewM
                 .padding(innerPadding)
         ) {
             //背景
-            ScreenUtils.backGround()
+            ScreenUtils.BackGround()
 
             //背景の前にあるボタンなど
             Column(
@@ -139,5 +139,5 @@ fun searchConditionScreen(context:Context,navController: NavHostController,viewM
 fun SearchConditionScreenPreview(){
     val context : Context = LocalContext.current
     val navController = rememberNavController()
-    searchConditionScreen(context,navController,viewModel = viewModel())
+    SearchConditionScreen(context,navController,viewModel = viewModel())
 }
