@@ -58,13 +58,10 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.navigation.compose)
-
     //Gsonの追加
     implementation (libs.gson)
-
     //fused location providerの追加
     implementation (libs.google.play.services.location)
-
     implementation(libs.coil.compose)
     //api実装のために記述したもの
     //Retrofit本体
@@ -80,8 +77,6 @@ dependencies {
     implementation(libs.androidx.contentpager)
     implementation(libs.androidx.animation.core.android)
     implementation(libs.androidx.animation.core.android)
-    //
-
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
