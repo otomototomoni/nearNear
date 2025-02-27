@@ -33,12 +33,10 @@ import androidx.compose.ui.layout.ContentScale.Companion.FillWidth
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.os.bundleOf
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
-import com.example.nearnear.HotPepperApi.ResponseData
 import com.example.nearnear.HotPepperApi.Shop
 import com.example.nearnear.MainViewModel
 import com.example.nearnear.R
@@ -64,7 +62,9 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
     val responseData by viewModel.responseData.collectAsState()
 
     //ページングするための変数
-    var startIndex by remember { mutableStateOf(1) }
+    //sublistのはじめのindex番号
+    var startIndex by remember { mutableStateOf(0) }
+    //sublistの最後のindex番号
     var endIndex by remember { mutableStateOf(5) }
     //shopListが初期化されるまで6の値を持ち、shopListが初期化されるとその値がこの中に入る。
     var shopListSize by remember { mutableStateOf(6) }
@@ -121,27 +121,25 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
                         .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    //前のリストを表示
-                    Button(
-                        onClick = {
-                            startIndex -= 5
-                            endIndex -= 5
-                            if(startIndex < 1){
-                                startIndex = 1
-                                endIndex = 5
-                            }
-                        },
-                        enabled = startIndex > 1
-                    ) {
-                        Text("前の商品を表示")
-                    }
                     //検索画面へ戻るボタンを
                     Button(
                         onClick = {
                             navController.navigate("searchCondition")
                         }
                     ) {
-                        Text("前の画面に戻る")
+                        Text("＜検索画面へ")
+                    }
+
+                    //前のリストを表示
+                    Button(
+                        onClick = {
+                            startIndex -= 5
+                            endIndex -= 5
+                        },
+                        //startIndexが0の時に前のリストを表示できないように
+                        enabled = startIndex > 1
+                    ) {
+                        Text("前のページ")
                     }
 
                     //次のリストを表示
@@ -149,13 +147,11 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
                         onClick = {
                             startIndex += 5
                             endIndex += 5
-                            if(startIndex > shopListSize){
-                                endIndex = shopListSize
-                            }
                         },
+                        //endIndexがshopListSizeより大きい時に次のリストを表示できないように
                         enabled = endIndex < shopListSize
                     ) {
-                        Text("次の商品を表示")
+                        Text("次のページ")
                     }
                 }
 
