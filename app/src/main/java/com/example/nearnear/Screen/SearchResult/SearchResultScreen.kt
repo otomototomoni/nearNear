@@ -18,6 +18,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -70,9 +71,11 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
     //sublistの最後のindex番号
     var endIndex by remember { mutableStateOf(5) }
     //shopListが初期化されるまで6の値を持ち、shopListが初期化されるとその値がこの中に入る。
-    var shopListSize by remember { mutableStateOf(6) }
+    var shopListSize by remember { mutableStateOf(responseData?.results?.shop?.size?:0) }
+    //画面全体の横幅
+    var screenWidth by remember { mutableStateOf(100) }
     //店のリストを表示するColumnの画面のheightサイズを取得する
-    var screenHeight by remember { mutableStateOf(100) }
+    var listScreenHeight by remember { mutableStateOf(100) }
 
     Scaffold(
         //ホットペッパーAPIのクレジットを表示
@@ -87,14 +90,17 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(top = 16.dp)
-                .fillMaxSize(),
+                .fillMaxSize()
+                .onGloballyPositioned { coordinates ->
+                    screenWidth = coordinates.size.width
+                },
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
             //上部の画面遷移やページングを行うボタン
             val indexPair: Pair<Int, Int> =
-                topButtons(startIndex, endIndex, shopListSize, navController)
+                topButtons(startIndex, endIndex, shopListSize, navController, screenWidth)
             startIndex = indexPair.first
             endIndex = indexPair.second
 
@@ -112,7 +118,7 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
                         shape = RoundedCornerShape(16.dp)
                     )
                     .onGloballyPositioned { coordinates ->
-                        screenHeight = coordinates.size.height
+                        listScreenHeight = coordinates.size.height
                     }
                     //スクロール可能にする
                     .verticalScroll(rememberScrollState())
@@ -127,7 +133,7 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
                         endIndex.coerceAtMost(shopList.size)
                     )
                     slicedShopList.forEach { shop ->
-                        ShopList(navController, shop, screenHeight)
+                        ShopList(navController, shop, listScreenHeight)
                     }
                 } else {
                     Text(
