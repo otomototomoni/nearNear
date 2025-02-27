@@ -57,7 +57,7 @@ import kotlin.math.roundToInt
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun SearchConditionScreen(context:Context,navController: NavHostController,viewModel: MainViewModel){
+fun searchConditionScreen(context:Context,navController: NavHostController,viewModel: MainViewModel){
     //Activity contextを代入
     val context : Context = context
 
@@ -74,7 +74,7 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
     Scaffold(
         //一番下に出てくるホットペッパーAPIのクレジット
         bottomBar = {
-            ScreenUtils.BottomBar()
+            ScreenUtils.bottomBar()
         }
     ) { innerPadding ->
         //背景を入れるためのBoxコンポーザブル
@@ -84,7 +84,7 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
                 .padding(innerPadding)
         ) {
             //背景
-            ScreenUtils.BackGround()
+            ScreenUtils.backGround()
 
             //背景の前にあるボタンなど
             Column(
@@ -96,7 +96,7 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
             ) {
                 //横にスライドできるバーを設置
                 //検索半径（１，２，３，４，５）を返すようにしており、rangeに代入
-                range = DraggableImage()
+                range = draggableImage()
 
                 //GPSかネットワークで位置情報を取得し、ホットペッパーAPIから店情報を取得。次の画面へ遷移
                 //パーミッションが許可されていない場合はパーミッションを許可を求める画面へ遷移
@@ -139,5 +139,5 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
 fun SearchConditionScreenPreview(){
     val context : Context = LocalContext.current
     val navController = rememberNavController()
-    SearchConditionScreen(context,navController,viewModel = viewModel())
+    searchConditionScreen(context,navController,viewModel = viewModel())
 }

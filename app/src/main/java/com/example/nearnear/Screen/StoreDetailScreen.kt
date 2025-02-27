@@ -34,7 +34,7 @@ import java.nio.charset.StandardCharsets
  * @param navController 画面遷移を行うためのコンテナ
  */
 @Composable
-fun StoreDetailScreen(
+fun storeDetailScreen(
     navController: NavHostController,
     viewModel: MainViewModel,
     shop: String?

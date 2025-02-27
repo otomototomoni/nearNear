@@ -21,7 +21,7 @@ class ScreenUtils{
 
     //ホットペッパーAPIのクレジットをBottomバーとして表示
     @Composable
-    fun BottomBar() {
+    fun bottomBar() {
         BottomAppBar(
             modifier = Modifier
                 .fillMaxWidth()
@@ -44,7 +44,7 @@ class ScreenUtils{
     }
 
     @Composable
-    fun BackGround(){
+    fun backGround(){
         Image(
             painter = painterResource(id = R.drawable.background),
             contentDescription = null,

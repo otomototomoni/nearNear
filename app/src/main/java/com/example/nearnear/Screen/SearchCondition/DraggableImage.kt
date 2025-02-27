@@ -28,7 +28,7 @@ import kotlin.math.roundToInt
  * SearchRangeText.ktでイラストのx座標に応じて検索範囲を表示
  */
 @Composable
-fun DraggableImage():Int {
+fun draggableImage():Int {
 
     // 猫のX座標を管理する状態変数
     var catX by remember { mutableStateOf(0f) }
@@ -81,5 +81,5 @@ fun DraggableImage():Int {
     //イラストのx座標がバーの長さを超えようとしたらバーの長さで止める
     if(catX > horizonBarWidth) catX = horizonBarWidth.toFloat()
     //ホットペッパーAPIでrangeを指定するときの1,2,3,4,5を検索範囲に応じて返す。
-    return SearchRangeText(catX,horizonBarWidth)
+    return searchRangeText(catX,horizonBarWidth)
 }

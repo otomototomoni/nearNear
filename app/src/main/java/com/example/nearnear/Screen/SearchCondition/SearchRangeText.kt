@@ -23,27 +23,27 @@ import androidx.compose.ui.unit.sp
  * ホットペッパーAPIで検索範囲を指定するのに使うrange(1,2,3,4,5)のどれかを検索範囲に応じて返す
  */
 @Composable
-fun SearchRangeText(range: Float,imageWidth: Int): Int{
+fun searchRangeText(range: Float,imageWidth: Int): Int{
     //表示する検索範囲
     var searchRange by remember { mutableStateOf(0) }
     //ホットペッパーAPIを実行するときのrange(1,2,3,4,5)の値
-    var ApiRange by remember { mutableStateOf(1) }
+    var apiRange by remember { mutableStateOf(1) }
 
     if(imageWidth*0.25 > range){
         searchRange = 300
-        ApiRange = 1
+        apiRange = 1
     }else if(imageWidth*0.5 > range) {
         searchRange = 500
-        ApiRange = 2
+        apiRange = 2
     }else if(imageWidth*0.75 > range) {
         searchRange = 1000
-        ApiRange = 3
+        apiRange = 3
     }else if(imageWidth > range) {
         searchRange = 2000
-        ApiRange = 4
+        apiRange = 4
     }else {
         searchRange = 3000
-        ApiRange = 5
+        apiRange = 5
     }
 
     //検索範囲のTextを表示
@@ -68,5 +68,5 @@ fun SearchRangeText(range: Float,imageWidth: Int): Int{
         )
     }
 
-    return ApiRange
+    return apiRange
 }

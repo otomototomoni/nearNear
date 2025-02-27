@@ -9,11 +9,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.nearnear.Screen.LocationPermissionScreen
-import com.example.nearnear.Screen.SearchCondition.SearchConditionScreen
-import com.example.nearnear.Screen.SearchResult.SearchResultScreen
-import com.example.nearnear.Screen.StoreDetailScreen
-import com.example.nearnear.Screen.TitleScreen
+import com.example.nearnear.Screen.SearchCondition.searchConditionScreen
+import com.example.nearnear.Screen.SearchResult.searchResultScreen
+import com.example.nearnear.Screen.locationPermissionScreen
+import com.example.nearnear.Screen.storeDetailScreen
+import com.example.nearnear.Screen.titleScreen
 
 /**
  * アプリケーションの画面遷移に関するコンポーザブル
@@ -33,9 +33,9 @@ fun AppNavHost(
         navController = navController,
         startDestination = startDestination
     ){
-        composable("title"){ TitleScreen(navController = navController) }
-        composable("searchCondition"){ SearchConditionScreen(context = context,navController = navController,viewModel = viewModel) }
-        composable("searchResult"){ SearchResultScreen(navController = navController,viewModel = viewModel) }
+        composable("title"){ titleScreen(navController = navController) }
+        composable("searchCondition"){ searchConditionScreen(context = context,navController = navController,viewModel = viewModel) }
+        composable("searchResult"){ searchResultScreen(navController = navController,viewModel = viewModel) }
         //DataClassを受け渡ししたいため、ParcelableTypeを使用している
         //streDetaileを指定するときに("storeDetail/(DataClass)")とすることで指定したDataClassを渡せる。
         composable(
@@ -46,12 +46,12 @@ fun AppNavHost(
         ){ navBackStackEntry ->
             //エンコードされたものを受け取る
             val shop = navBackStackEntry.arguments?.getString("shop")
-            StoreDetailScreen(
+            storeDetailScreen(
                 navController = navController,
                 viewModel = viewModel,
                 shop = shop
             )
         }
-        composable("locationPermission") { LocationPermissionScreen(navController = navController,viewModel = viewModel) }
+        composable("locationPermission") { locationPermissionScreen(navController = navController,viewModel = viewModel) }
     }
 }
