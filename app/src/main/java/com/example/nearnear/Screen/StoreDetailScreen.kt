@@ -133,7 +133,7 @@ fun StoreDetailScreen(
                 )
                 //アドレス
                 Text(
-                    text = "ADERESS",
+                    text = "ADDRESS",
                     modifier = Modifier
                         .padding(top = 16.dp),
                     fontSize = 20.sp,
