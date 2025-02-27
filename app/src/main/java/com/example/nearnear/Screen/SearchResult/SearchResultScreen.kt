@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale.Companion.FillBounds
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -70,6 +71,8 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
     var endIndex by remember { mutableStateOf(5) }
     //shopListが初期化されるまで6の値を持ち、shopListが初期化されるとその値がこの中に入る。
     var shopListSize by remember { mutableStateOf(6) }
+    //店のリストを表示するColumnの画面のheightサイズを取得する
+    var screenHeight by remember { mutableStateOf(100) }
 
     Scaffold(
         //ホットペッパーAPIのクレジットを表示
@@ -77,64 +80,61 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
             ScreenUtils.BottomBar()
         }
     ) { innerPadding ->
+        //背景
+        ScreenUtils.BackGround(innerPadding)
 
-        Box(
+        Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(innerPadding)
-
+                .padding(top = 16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            //背景
-            ScreenUtils.BackGround()
 
+            //上部の画面遷移やページングを行うボタン
+            val indexPair: Pair<Int, Int> =
+                topButtons(startIndex, endIndex, shopListSize, navController)
+            startIndex = indexPair.first
+            endIndex = indexPair.second
+
+            //飲食店情報尾のリストを表示するところ
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(top = 16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-
-                //上部の画面遷移やページングを行うボタン
-                val indexPair: Pair<Int, Int> = topButtons(startIndex, endIndex, shopListSize, navController)
-                startIndex = indexPair.first
-                endIndex = indexPair.second
-
-                //飲食店情報尾のリストを表示するところ
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp)
-                        .clip(
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .border(
-                            width = 2.dp,
-                            color = Color.Blue,
-                            shape = RoundedCornerShape(16.dp)
-                        )
-                        .verticalScroll(rememberScrollState())
-                        .background(color = Color.White)
-                    //スクロール可能にする
-                ) {
-                    if (responseData != null) {
-                        //データをスライスする
-                        val shopList = responseData!!.results.shop
-                        shopListSize = shopList.size
-                        val slicedShopList = shopList.subList(
-                            startIndex,
-                            endIndex.coerceAtMost(shopList.size)
-                        )
-                        slicedShopList.forEach { shop ->
-                            ShopList(navController, shop)
-                        }
-                    } else {
-                        Text(
-                            text = "店情報取得中...しばらくお待ちください。",
-                            modifier = Modifier
-                                .padding(16.dp)
-                        )
+                    .padding(16.dp)
+                    .clip(
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .border(
+                        width = 2.dp,
+                        color = Color.Blue,
+                        shape = RoundedCornerShape(16.dp)
+                    )
+                    .onGloballyPositioned { coordinates ->
+                        screenHeight = coordinates.size.height
                     }
+                    //スクロール可能にする
+                    .verticalScroll(rememberScrollState())
+                    .background(color = Color.White)
+            ) {
+                if (responseData != null) {
+                    //データをスライスする
+                    val shopList = responseData!!.results.shop
+                    shopListSize = shopList.size
+                    val slicedShopList = shopList.subList(
+                        startIndex,
+                        endIndex.coerceAtMost(shopList.size)
+                    )
+                    slicedShopList.forEach { shop ->
+                        ShopList(navController, shop, screenHeight)
+                    }
+                } else {
+                    Text(
+                        text = "店情報取得中...しばらくお待ちください。",
+                        modifier = Modifier
+                            .padding(16.dp)
+                    )
                 }
             }
         }

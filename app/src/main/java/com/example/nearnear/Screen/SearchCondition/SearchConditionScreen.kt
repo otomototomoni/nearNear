@@ -77,36 +77,31 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
             ScreenUtils.BottomBar()
         }
     ) { innerPadding ->
-        //背景を入れるためのBoxコンポーザブル
-        Box(
+        //背景
+        ScreenUtils.BackGround(innerPadding)
+
+        //背景の前にあるボタンなど
+        Column(
             modifier = Modifier
-                .fillMaxSize()
                 .padding(innerPadding)
+                .padding(16.dp)
+                .fillMaxSize(),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            //背景
-            ScreenUtils.BackGround()
+            //横にスライドできるバーを設置
+            //検索半径（１，２，３，４，５）を返すようにしており、rangeに代入
+            range = draggableImage()
 
-            //背景の前にあるボタンなど
-            Column(
+            //GPSかネットワークで位置情報を取得し、ホットペッパーAPIから店情報を取得。次の画面へ遷移
+            //パーミッションが許可されていない場合はパーミッションを許可を求める画面へ遷移
+            Image(
+                painter = painterResource(id = R.drawable.search_button),
+                contentDescription = null,
+                contentScale = Crop,
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                //横にスライドできるバーを設置
-                //検索半径（１，２，３，４，５）を返すようにしており、rangeに代入
-                range = draggableImage()
-
-                //GPSかネットワークで位置情報を取得し、ホットペッパーAPIから店情報を取得。次の画面へ遷移
-                //パーミッションが許可されていない場合はパーミッションを許可を求める画面へ遷移
-                Image(
-                    painter = painterResource(id = R.drawable.search_button),
-                    contentDescription = null,
-                    contentScale = Crop,
-                    modifier = Modifier
-                        .padding(top = 32.dp)
-                        .clickable {
+                    .padding(top = 32.dp)
+                    .clickable {
                         if (!PermissionUtils.checkGpsPermission(context)) {
                             Log.d("SearchConditionScreen.kt", "GPSパーミッションがオフです。")
                             navController.navigate("locationPermission")
@@ -128,8 +123,7 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
                             navController.navigate("searchResult")
                         }
                     }
-                )
-            }
+            )
         }
     }
 }
