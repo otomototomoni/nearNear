@@ -76,12 +76,13 @@ fun SearchResultScreen(navController: NavHostController,viewModel: MainViewModel
     var screenWidth by remember { mutableStateOf(100) }
     //店のリストを表示するColumnの画面のheightサイズを取得する
     var listScreenHeight by remember { mutableStateOf(100) }
+    //現在のページ
+    val currentPage by remember { mutableStateOf(endIndex/5) }
 
     Scaffold(
         //ホットペッパーAPIのクレジットを表示
-        bottomBar = {
-            ScreenUtils.BottomBar()
-        }
+        bottomBar = { ScreenUtils.BottomBar() },
+        containerColor = Color.LightGray
     ) { innerPadding ->
         //背景
         ScreenUtils.BackGround(innerPadding)

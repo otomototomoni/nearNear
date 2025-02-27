@@ -73,9 +73,8 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
 
     Scaffold(
         //一番下に出てくるホットペッパーAPIのクレジット
-        bottomBar = {
-            ScreenUtils.BottomBar()
-        }
+        bottomBar = { ScreenUtils.BottomBar() },
+        containerColor = Color.LightGray
     ) { innerPadding ->
         //背景
         ScreenUtils.BackGround(innerPadding)
@@ -120,6 +119,7 @@ fun SearchConditionScreen(context:Context,navController: NavHostController,viewM
                                 longitude = location?.longitude ?: 133.193555, // null：尾道駅の経度
                                 range = range
                             )
+                            //１ページ目を表示
                             navController.navigate("searchResult")
                         }
                     }
