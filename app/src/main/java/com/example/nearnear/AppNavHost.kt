@@ -9,16 +9,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.nearnear.HotPepperApi.Shop
 import com.example.nearnear.Screen.LocationPermissionScreen
-import com.example.nearnear.Screen.SearchConditionScreen
-import com.example.nearnear.Screen.SearchResultScreen
+import com.example.nearnear.Screen.SearchCondition.SearchConditionScreen
+import com.example.nearnear.Screen.SearchResult.SearchResultScreen
 import com.example.nearnear.Screen.StoreDetailScreen
 import com.example.nearnear.Screen.TitleScreen
-import com.google.gson.Gson
-import java.net.URLDecoder
-import java.net.URLEncoder
-import java.nio.charset.StandardCharsets
 
 /**
  * アプリケーションの画面遷移に関するコンポーザブル
@@ -40,20 +35,20 @@ fun AppNavHost(
     ){
         composable("title"){ TitleScreen(navController = navController) }
         composable("searchCondition"){ SearchConditionScreen(context = context,navController = navController,viewModel = viewModel) }
-        composable("searchResult"){ SearchResultScreen(navController = navController,viewModel = viewModel) }
+        //表示するページ数を引数として渡さないと、画面遷移した際に１ページ目からになる
+        composable("searchResult"){ SearchResultScreen(navController = navController, viewModel = viewModel) }
         //DataClassを受け渡ししたいため、ParcelableTypeを使用している
         //streDetaileを指定するときに("storeDetail/(DataClass)")とすることで指定したDataClassを渡せる。
         composable(
             "storeDetail/{shop}",
             arguments = listOf(
-                navArgument("shop") { type = NavType.StringType},
+                navArgument("shop") { type = NavType.StringType}
             )
         ){ navBackStackEntry ->
             //エンコードされたものを受け取る
             val shop = navBackStackEntry.arguments?.getString("shop")
             StoreDetailScreen(
                 navController = navController,
-                viewModel = viewModel,
                 shop = shop
             )
         }
